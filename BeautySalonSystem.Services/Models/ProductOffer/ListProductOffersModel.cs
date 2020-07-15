@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BeautySalonSystem.Products.Models.ProductOffer
 {
-    public class ListProductOffersModel
+    public class ListProductOffersModell
     {
         public ListProductOffersModel()
         {

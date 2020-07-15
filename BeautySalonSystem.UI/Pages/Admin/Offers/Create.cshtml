@@ -1,0 +1,47 @@
+﻿@page
+@model BeautySalonSystem.UI.Pages.Admin.Offers.Create
+
+@{
+    ViewData["Title"] = "Create Offer";
+}
+
+<header class="masthead-admin bg-primary text-white text-center">
+    <div class="masthead-admin-container d-flex align-items-center flex-column">
+        <h1 class="masthead-heading text-uppercase mb-0 text-white">Добави нова оферта</h1>
+        <!-- Icon Divider-->
+        <div class="divider-custom divider-light">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-leaf"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <!-- Masthead Subheading-->
+        <p class="masthead-subheading font-weight-light mb-0"></p>
+    </div>
+</header>
+
+<div class="container align-content-center admin-products-actions">
+  <a class="btn btn-default" href="@Url.Page("/Admin/Offers/Index")"><i class="fas fa-chevron-left"></i> Обратно</a>
+</div>
+
+<div class="container col-6">
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="Name" class="col-form-label col-md-3">Име</label>
+            <input type="text" class="form-control" asp-for="Name">
+        </div>
+        <div class="form-group">
+            <label asp-for="ExpiryDate" class="col-form-label col-md-3">Активна до:</label>
+            <input type="date" class="form-control datetime-local" asp-for="ExpiryDate">
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <select asp-items="Model.Products" asp-for="SelectedProductsIds" class="selectpicker form-control" data-live-search="true" data-actions-box="true" multiple></select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn btn-success">Добави</button>
+        </div>
+    </form>
+</div>

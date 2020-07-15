@@ -1,18 +1,19 @@
+using System.IdentityModel.Tokens.Jwt;
+using BeautySalonSystem.Products.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
-namespace BeautySalonSystem.Services
+namespace BeautySalonSystem.Products
 {
     using AutoMapper;
-    using BeautySalonSystem.Infrastructure;
-    using BeautySalonSystem.Products.Data;
-    using BeautySalonSystem.Products.Data.Repositories;
-    using BeautySalonSystem.Products.Profiles;
-    using BeautySalonSystem.Products.Services;
+    using Data;
+    using Data.Repositories;
+    using Profiles;
     using BeautySalonSystem.Profiles;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using System;
 
     public class Startup
     {
@@ -21,13 +22,14 @@ namespace BeautySalonSystem.Services
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            var connStr = this.Configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
             services
-                .AddWebService<ProductsDbContext>(this.Configuration)
+                .AddDbContext<ProductsDbContext>(opt => opt.UseSqlServer(connStr))
                 .AddTransient<IProductsRepository, ProductsRepository>()
                 .AddTransient<IProductOffersRepository, ProductOffersRepository>()
                 .AddTransient<IOffersRepository, OffersRepository>()
-                .AddTransient<IProductOffersService, ProductOffersService>()
-                .AddMessaging();
+                .AddTransient<IProductOffersService, ProductOffersService>();
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -37,11 +39,34 @@ namespace BeautySalonSystem.Services
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
+            
+            var SecretKey = this.Configuration.GetSection("ApplicationSettings:Secret").Value;
+
+            services.AddAuthorization();
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "https://localhost:8001";
+                    options.Audience = "ms";
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateAudience = false
+                    };
+                });
+            
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-            => app
-                .UseWebService(env)
-                .Initialize();
+        {
+            app.UseAuthentication();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace BeautySalonSystem.Products.Services
     public interface IProductOffersService
     {
         Task<Result<CreateProductOfferOutputModel>> Create(CreateProductOfferInputModel input);
+        Task<Result<IEnumerable<ListProductOffersModel>>> GetAll();
         Task<Result<ListProductOffersModel>> GetAllByProductId(int productId);
     }
 }

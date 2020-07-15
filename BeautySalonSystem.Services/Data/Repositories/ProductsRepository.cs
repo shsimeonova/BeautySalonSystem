@@ -43,12 +43,16 @@ namespace BeautySalonSystem.Products.Data
 
         public void Update(Product item)
         {
-            throw new NotImplementedException();
+            _context.Products.Update(item);
         }
 
         public void Delete(Product item)
         {
-            throw new NotImplementedException();
+            if (item == null)
+            {
+                throw new ArgumentNullException();
+            }
+            _context.Products.Remove(item);
         }
 
         public bool SaveChanges()

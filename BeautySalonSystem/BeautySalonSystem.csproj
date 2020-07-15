@@ -21,4 +21,22 @@
 		</PackageReference>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="BeautySalonSystem.TestAuth\Views\Home\About.cshtml" />
+	  <_ContentIncludedByDefault Remove="BeautySalonSystem.TestAuth\Views\Home\Contact.cshtml" />
+	  <_ContentIncludedByDefault Remove="BeautySalonSystem.TestAuth\Views\Home\Index.cshtml" />
+	  <_ContentIncludedByDefault Remove="BeautySalonSystem.TestAuth\Views\Shared\Error.cshtml" />
+	  <_ContentIncludedByDefault Remove="BeautySalonSystem.TestAuth\Views\Shared\_Layout.cshtml" />
+	  <_ContentIncludedByDefault Remove="BeautySalonSystem.TestAuth\Views\_ViewStart.cshtml" />
+	  <_ContentIncludedByDefault Remove="BeautySalonSystem.TestAuth\packages.config" />
+	  <_ContentIncludedByDefault Remove="BeautySalonSystem.TestAuth\Views\Web.config" />
+	  <_ContentIncludedByDefault Remove="BeautySalonSystem.TestAuth\Web.config" />
+	  <_ContentIncludedByDefault Remove="BeautySalonSystem.TestAuth\Web.Debug.config" />
+	  <_ContentIncludedByDefault Remove="BeautySalonSystem.TestAuth\Web.Release.config" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Infrastructure" />
+	</ItemGroup>
+
 </Project>

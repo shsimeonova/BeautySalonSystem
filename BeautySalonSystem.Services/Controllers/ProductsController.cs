@@ -25,16 +25,31 @@ namespace BeautySalonSystem.Products.Data
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IEnumerable<GetProductOutputModel>> List()
         {
             var products = _repository.GetAll();
 
             return this._mapper.ProjectTo<GetProductOutputModel>(products.AsQueryable<Product>());
         }
+        
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<ActionResult<GetProductOutputModel>> GetById(int id)
+        {
+            var product = _repository.GetByID(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return this._mapper.Map<GetProductOutputModel>(product);
+        }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<int>> Create(CreateProductInputModel input)
+        public async Task<ActionResult<int>> Create([FromBody] CreateProductInputModel input)
         {
             var product = new Product
             {
@@ -48,6 +63,53 @@ namespace BeautySalonSystem.Products.Data
             this._repository.SaveChanges();
 
             return product.Id;
+        }
+        
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<ActionResult<int>> Edit(int id, [FromBody] CreateProductInputModel input)
+        {
+            var product = this._repository.GetByID(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            product.Name = input.Name;
+            product.Price = input.Price;
+            product.Type = (ProductType) Enum.Parse(typeof(ProductType), input.Type);
+
+            _repository.Update(product);
+            _repository.SaveChanges();
+
+            return product.Id;
+        }
+        
+        [HttpDelete]
+        [Authorize]
+        public async Task<ActionResult<bool>> Delete(int id)
+        {
+            var product = _repository.GetByID(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            _repository.Delete(product);
+            _repository.SaveChanges();
+
+            return true;
+        }
+        
+        [HttpGet("types")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<string>>> GetProductOptions()
+        {
+            var types = Enum.GetNames(typeof(ProductType)).ToList();
+
+            return types;
         }
     }
 }

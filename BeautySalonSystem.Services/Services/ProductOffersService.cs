@@ -18,20 +18,17 @@ namespace BeautySalonSystem.Products.Services
         private readonly IProductOffersRepository _productOffersRepository;
         private readonly IProductsRepository _productRepository;
         private readonly IOffersRepository _offersRepository;
-        private readonly ICurrentUserService _currentUser;
         private readonly IMapper _mapper;
 
         public ProductOffersService(IProductOffersRepository productOffersRepository,
            IProductsRepository productRepository,
            IOffersRepository offersRepository,
-           IMapper mapper,
-           ICurrentUserService currentUser)
+           IMapper mapper)
         {
-            this._productOffersRepository = productOffersRepository;
-            this._productRepository = productRepository;
-            this._offersRepository = offersRepository;
-            this._mapper = mapper;
-            this._currentUser = currentUser;
+            _productOffersRepository = productOffersRepository;
+            _productRepository = productRepository;
+            _offersRepository = offersRepository;
+            _mapper = mapper;
         }
 
         public async Task<Result<CreateProductOfferOutputModel>> Create(CreateProductOfferInputModel input)
@@ -55,7 +52,6 @@ namespace BeautySalonSystem.Products.Services
                 TotalPrice = products.Sum(p => p.Price),
                 Discount = input.Discount,
                 ExpiryDate = DateTime.ParseExact(input.ExpiryDate, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                AddedById = _currentUser.UserId,
                 ProductOffers = new List<ProductOffer>()
             };
 
@@ -75,6 +71,11 @@ namespace BeautySalonSystem.Products.Services
             });
 
             return new CreateProductOfferOutputModel() { OfferId = offer.Id };
+        }
+
+        public Task<Result<IEnumerable<ListProductOffersModel>>> GetAll()
+        {
+            return _offersRepository.GetAll()
         }
 
         public async Task<Result<ListProductOffersModel>> GetAllByProductId(int productId)

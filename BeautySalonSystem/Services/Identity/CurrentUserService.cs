@@ -2,7 +2,6 @@
 {
     using System;
     using System.Security.Claims;
-    using Infrastructure;
     using Microsoft.AspNetCore.Http;
 
     public class CurrentUserService : ICurrentUserService
@@ -22,7 +21,6 @@
         }
 
         public string UserId { get; }
-
-        public bool IsAdministrator => this.user.IsAdministrator();
+        public bool IsAdministrator { get; }
     }
 }

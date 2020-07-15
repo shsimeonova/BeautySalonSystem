@@ -29,7 +29,8 @@ namespace BeautySalonSystem.Products
                 .AddTransient<IProductsRepository, ProductsRepository>()
                 .AddTransient<IProductOffersRepository, ProductOffersRepository>()
                 .AddTransient<IOffersRepository, OffersRepository>()
-                .AddTransient<IProductOffersService, ProductOffersService>();
+                .AddTransient<IOffersService, OffersService>();
+
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -43,6 +44,7 @@ namespace BeautySalonSystem.Products
             var SecretKey = this.Configuration.GetSection("ApplicationSettings:Secret").Value;
 
             services.AddAuthorization();
+            
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
@@ -54,7 +56,7 @@ namespace BeautySalonSystem.Products
                         ValidateAudience = false
                     };
                 });
-            
+
             services.AddControllers();
         }
 

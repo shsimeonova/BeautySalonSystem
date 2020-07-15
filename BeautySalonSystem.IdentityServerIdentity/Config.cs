@@ -45,7 +45,7 @@ namespace IdentityServerAspNetIdentity
                 new Client
                 {
                     ClientId = "BeautySalonSystem.UI",
-                    ClientSecrets = { new Secret("".Sha256()) },
+                    ClientSecrets = { new Secret("Valt1n3r_01234567".Sha256()) },
                     
                     AllowedGrantTypes = GrantTypes.Code,
                     AccessTokenLifetime = 120,

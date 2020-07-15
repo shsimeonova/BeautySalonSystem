@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Authentication;
 using BeautySalonSystem.UI.Models;
 using BeautySalonSystem.UI.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -36,7 +37,8 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
         
         public void OnGet()
         {
-            var types = _productsService.GetProductTypes(HttpContext.Request);
+            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
+            var types = _productsService.GetProductTypes(accessToken);
             TypeOptions = types.Select(type =>
                 new SelectListItem
                 {
@@ -47,19 +49,13 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
         
         public IActionResult OnPost()
         {
-            try
+            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
+            _productsService.Create(new ProductCreateInputModel()
             {
-                _productsService.Create(new ProductCreateInputModel()
-                {
-                    Name = this.Name, 
-                    Type = this.Type, 
-                    Price = this.Price
-                }, HttpContext.Request);
-            }
-            catch (AuthenticationException ae)
-            {
-                
-            }
+                Name = this.Name, 
+                Type = this.Type, 
+                Price = this.Price
+            }, accessToken);
 
             return RedirectToPage("./Index");
         }

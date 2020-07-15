@@ -40,8 +40,8 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
 
         public async Task<IActionResult> OnPostDeleteProduct(int id)
         {
-            
-            _productsService.Delete(id, HttpContext.Request);
+            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
+            _productsService.Delete(id, accessToken);
             // return new RedirectToPageResult("/Users/Login", new {returnUrl = "/Admin/Products?handler=PostDeleteProduct"});
             return await this.OnGet();
         }

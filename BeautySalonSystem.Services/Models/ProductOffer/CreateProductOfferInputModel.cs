@@ -7,7 +7,7 @@ namespace BeautySalonSystem.Products.Models.ProductOffer
 {
     public class CreateProductOfferInputModel
     {
-        public List<int> Products { get; set; }
+        public IEnumerable<int> Products { get; set; }
 
         public string Name { get; set; }
 

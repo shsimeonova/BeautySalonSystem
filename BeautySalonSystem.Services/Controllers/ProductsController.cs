@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using BeautySalonSystem.Controllers;
 using BeautySalonSystem.Products.Data.Models;
-using BeautySalonSystem.Products.Data.Repositories;
 using BeautySalonSystem.Products.Models;
-using BeautySalonSystem.Services.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

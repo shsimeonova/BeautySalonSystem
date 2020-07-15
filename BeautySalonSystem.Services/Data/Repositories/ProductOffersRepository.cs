@@ -1,12 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using BeautySalonSystem.Products.Data.Models;
-using BeautySalonSystem.Services;
 
 namespace BeautySalonSystem.Products.Data.Repositories
 {
+    public interface IProductOffersRepository
+    {
+        void Add(ProductOffer item);
+
+        void Delete(ProductOffer item);
+
+        IEnumerable<ProductOffer> GetAll();
+
+        ProductOffer GetByID(int id);
+
+        void Update(ProductOffer item);
+
+        List<ProductOffer> GetAllByProductId(int productId);
+
+        bool SaveChanges();
+    }
+    
     public class ProductOffersRepository : IProductOffersRepository
     {
         private readonly ProductsDbContext _context;
@@ -27,7 +42,7 @@ namespace BeautySalonSystem.Products.Data.Repositories
 
         public IEnumerable<ProductOffer> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.ProductOffers.ToList();
         }
 
         public List<ProductOffer> GetAllByProductId(int productId)

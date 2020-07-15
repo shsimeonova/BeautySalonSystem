@@ -9,26 +9,37 @@ using Newtonsoft.Json;
 
 namespace BeautySalonSystem.UI.Services
 {
-    public interface IOfferService
+    public interface IOffersService
     {
+        IEnumerable<ViewOfferOutputModel> GetAll(string accessToken);
         void Create(CreateOfferInputModel input, string accessToken);
     }
     
-    public class OfferService : IOfferService
+    public class OffersService : IOffersService
     {
         private readonly HttpClient _client;
         private string _offersBaseUrl;
         
-        public OfferService(IConfiguration configuration)
+        public OffersService(IConfiguration configuration)
         {
             Configuration = configuration;
-            _offersBaseUrl = Configuration.GetSection("Services:Products:Url").Value + "productoffers";
+            _offersBaseUrl = Configuration.GetSection("Services:Products:Url").Value + "offers";
             _client = new HttpClient();
         }
         
         public IConfiguration Configuration { get; }
-        
-        public async void Create(CreateOfferInputModel input, string accessToken)
+
+        public IEnumerable<ViewOfferOutputModel> GetAll(string accessToken)
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var response = _client.GetAsync(_offersBaseUrl).Result;
+            string responseBody = response.Content.ReadAsStringAsync().Result;
+            var allOffers = JsonConvert.DeserializeObject<IEnumerable<ViewOfferOutputModel>>(responseBody);
+
+            return allOffers;
+        }
+
+        public void Create(CreateOfferInputModel input, string accessToken)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var content = new JsonContent(
@@ -40,8 +51,8 @@ namespace BeautySalonSystem.UI.Services
                 ExpiryDate = input.ExpiryDate
             });
             
-            var response = await _client.PostAsync(_offersBaseUrl, content);
-            string responseBody = await response.Content.ReadAsStringAsync();
+            var response = _client.PostAsync(_offersBaseUrl, content).Result;
+            string responseBody = response.Content.ReadAsStringAsync().Result;
 
             Console.WriteLine();
         }

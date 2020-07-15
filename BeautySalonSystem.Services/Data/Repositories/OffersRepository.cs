@@ -6,9 +6,25 @@ using BeautySalonSystem.Products.Data.Models;
 using BeautySalonSystem.Products;
 using BeautySalonSystem.Products.Data.Repositories;
 using System.Linq.Expressions;
+using BeautySalonSystem.Products.Models;
 
 namespace BeautySalonSystem.Products.Data
 {
+    public interface IOffersRepository
+    {
+        void Add(Offer item);
+
+        void Delete(Offer item);
+
+        IEnumerable<OfferDto> GetAll();
+
+        Offer GetByID(int id);
+
+        void Update(Offer item);
+
+        bool SaveChanges();
+    }
+    
     public class OffersRepository : IOffersRepository
     {
         private readonly ProductsDbContext _context;
@@ -28,9 +44,18 @@ namespace BeautySalonSystem.Products.Data
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Offer> GetAll()
+        public IEnumerable<OfferDto> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Offers.Select(o => new OfferDto
+            {
+                Id = o.Id,
+                Name = o.Name,
+                Discount = o.Discount,
+                TotalPrice = o.TotalPrice,
+                ExpiryDate = o.ExpiryDate,
+                AddedById = o.AddedById,
+                Products = o.ProductOffers.Select(po => po.Product).ToList()
+            }).ToList();
         }
 
         public Offer GetByID(int id)

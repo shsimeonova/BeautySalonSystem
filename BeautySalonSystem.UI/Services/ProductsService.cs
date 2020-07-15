@@ -16,9 +16,9 @@ namespace BeautySalonSystem.UI.Services
     public interface IProductsService
     {
         IEnumerable<ProductViewModel> GetAll(string accessToken);
-        void Create(ProductCreateInputModel input, HttpRequest request);
-        void Delete(int id, HttpRequest request);
-        IEnumerable<string> GetProductTypes(HttpRequest request);
+        void Create(ProductCreateInputModel input, string accessToken);
+        void Delete(int id, string accessToken);
+        IEnumerable<string> GetProductTypes(string accessToken);
     }
     
     public class ProductsService : IProductsService
@@ -34,12 +34,6 @@ namespace BeautySalonSystem.UI.Services
         }
         
         public IConfiguration Configuration { get; }
-
-        private void AttachTokenHeader(HttpRequest request)
-        {
-            var token = request.Headers["Authorization"];
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        }
         
         public IEnumerable<ProductViewModel> GetAll(string accessToken)
         {
@@ -51,10 +45,9 @@ namespace BeautySalonSystem.UI.Services
             return allProducts;
         }
         
-        public void Create(ProductCreateInputModel input, HttpRequest request)
+        public void Create(ProductCreateInputModel input, string accessToken)
         {
-            var token = request.Headers["Authorization"];
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var content = JsonConvert.SerializeObject(new
             {
@@ -65,15 +58,15 @@ namespace BeautySalonSystem.UI.Services
             var response = _client.PostAsync(_productsBaseUrl, new StringContent(content,  Encoding.UTF8, "application/json")).Result;
         } 
         
-        public void Delete(int id, HttpRequest request)
+        public void Delete(int id, string accessToken)
         {
-            AttachTokenHeader(request);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var response = _client.DeleteAsync(this._productsBaseUrl + $"?id={id}").Result;
         }
 
-        public IEnumerable<string> GetProductTypes(HttpRequest request)
+        public IEnumerable<string> GetProductTypes(string accessToken)
         {
-            AttachTokenHeader(request);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var response = _client.GetAsync(_productsBaseUrl + "/types").Result;
             var responseList = JsonConvert.DeserializeObject<IEnumerable<string>>(response.Content.ReadAsStringAsync().Result);
 

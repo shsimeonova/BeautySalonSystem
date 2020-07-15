@@ -11,5 +11,6 @@ namespace BeautySalonSystem.Products.Data.Models
         Nails = 2,
         Hair = 3,
         BodyHair = 4,
+        Massage = 5
     }
 }

@@ -16,12 +16,12 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
     [Authorize(Policy = "Admin")]
     public class Preview : PageModel
     {
-        private IOfferService _offerService;
+        private IOffersService offersService;
         private ISessionHelper _sessionHelper;
 
-        public Preview(IOfferService offerService, ISessionHelper sessionHelper)
+        public Preview(IOffersService offersService, ISessionHelper sessionHelper)
         {
-            _offerService = offerService;
+            this.offersService = offersService;
             _sessionHelper = sessionHelper;
         }
         
@@ -50,7 +50,7 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
         public async Task<IActionResult> OnPost()
         {
             var access_token = await HttpContext.GetTokenAsync("access_token");
-            _offerService.Create(CreateOfferInput, access_token);
+            offersService.Create(CreateOfferInput, access_token);
             
             return RedirectToPage("./Index");
         }

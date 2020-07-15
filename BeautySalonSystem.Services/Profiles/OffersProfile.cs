@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BeautySalonSystem.Products.Models;
 
 namespace BeautySalonSystem.Products.Profiles
 {
@@ -11,7 +12,8 @@ namespace BeautySalonSystem.Products.Profiles
     {
         public OffersProfile()
         {
-            CreateMap<Offer, BeautySalonSystem.Products.Models.GetOfferModel>();
+            CreateMap<Offer, GetOfferModel>();
+            CreateMap<OfferDto, GetOfferModel>();
         }
     }
 }

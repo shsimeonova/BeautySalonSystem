@@ -1,13 +1,10 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Authentication;
 using System.Text;
 using BeautySalonSystem.UI.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using BeautySalonSystem.UI.Util;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -16,7 +13,9 @@ namespace BeautySalonSystem.UI.Services
     public interface IProductsService
     {
         IEnumerable<ProductViewModel> GetAll(string accessToken);
+        ProductViewModel GetById(int id, string accessToken);
         void Create(ProductCreateInputModel input, string accessToken);
+        void Edit(ProductEditViewModel input, string accessToken);
         void Delete(int id, string accessToken);
         IEnumerable<string> GetProductTypes(string accessToken);
     }
@@ -45,6 +44,16 @@ namespace BeautySalonSystem.UI.Services
             return allProducts;
         }
         
+        public ProductViewModel GetById(int id, string accessToken)
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            string requestUrl = _productsBaseUrl + $"/{id}";
+            var getProductResponse = _client.GetAsync(requestUrl).Result;
+            ProductViewModel result = JsonConvert.DeserializeObject<ProductViewModel>(getProductResponse.Content.ReadAsStringAsync().Result);
+
+            return result;
+        }
+        
         public void Create(ProductCreateInputModel input, string accessToken)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -56,8 +65,17 @@ namespace BeautySalonSystem.UI.Services
                 Type = input.Type
             });
             var response = _client.PostAsync(_productsBaseUrl, new StringContent(content,  Encoding.UTF8, "application/json")).Result;
-        } 
-        
+        }
+
+        public void Edit(ProductEditViewModel input, string accessToken)
+        {
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
+            var requestUrl = _productsBaseUrl + $"/{input.Id}";
+            var response = _client.PutAsync(requestUrl, content).Result;
+            Console.WriteLine();
+        }
+
         public void Delete(int id, string accessToken)
         {
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);

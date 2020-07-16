@@ -24,16 +24,16 @@ namespace BeautySalonSystem.Products.Data
 
         [HttpGet]
         [Authorize]
-        public async Task<IEnumerable<GetProductOutputModel>> List()
+        public IActionResult List()
         {
             var products = _repository.GetAll();
 
-            return this._mapper.ProjectTo<GetProductOutputModel>(products.AsQueryable<Product>());
+            return Ok(_mapper.ProjectTo<GetProductOutputModel>(products.AsQueryable<Product>()));
         }
         
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<GetProductOutputModel>> GetById(int id)
+        public IActionResult GetById(int id)
         {
             var product = _repository.GetByID(id);
 
@@ -42,12 +42,12 @@ namespace BeautySalonSystem.Products.Data
                 return NotFound();
             }
 
-            return this._mapper.Map<GetProductOutputModel>(product);
+            return Ok(_mapper.Map<GetProductOutputModel>(product));
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<int>> Create([FromBody] CreateProductInputModel input)
+        public IActionResult Create([FromBody] CreateProductInputModel input)
         {
             var product = new Product
             {
@@ -57,17 +57,17 @@ namespace BeautySalonSystem.Products.Data
                 ProductOffers = new List<ProductOffer>()
             };
 
-            this._repository.Add(product);
-            this._repository.SaveChanges();
+            _repository.Add(product);
+            _repository.SaveChanges();
 
-            return product.Id;
+            return Ok(product.Id);
         }
         
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<ActionResult<int>> Edit(int id, [FromBody] CreateProductInputModel input)
+        public IActionResult Edit(int id, [FromBody] CreateProductInputModel input)
         {
-            var product = this._repository.GetByID(id);
+            var product = _repository.GetByID(id);
 
             if (product == null)
             {
@@ -81,12 +81,12 @@ namespace BeautySalonSystem.Products.Data
             _repository.Update(product);
             _repository.SaveChanges();
 
-            return product.Id;
+            return Ok(product.Id);
         }
         
         [HttpDelete]
         [Authorize]
-        public async Task<ActionResult<bool>> Delete(int id)
+        public IActionResult Delete(int id)
         {
             var product = _repository.GetByID(id);
 
@@ -98,16 +98,16 @@ namespace BeautySalonSystem.Products.Data
             _repository.Delete(product);
             _repository.SaveChanges();
 
-            return true;
+            return Ok();
         }
         
         [HttpGet("types")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<string>>> GetProductOptions()
+        public IActionResult GetProductOptions()
         {
             var types = Enum.GetNames(typeof(ProductType)).ToList();
 
-            return types;
+            return Ok(types);
         }
     }
 }

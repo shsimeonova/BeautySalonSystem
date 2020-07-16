@@ -1,10 +1,12 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Authentication;
 using BeautySalonSystem.UI.Models;
 using BeautySalonSystem.UI.Services;
+using BeautySalonSystem.UI.Util;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,10 +28,18 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
         
         public IConfiguration Configuration { get; }
         
-        [BindProperty, Required]
+        [BindProperty, Required, MinLength(3)]
         public string Name { get; set; }
+        
         [BindProperty, Required]
+        [PageRemote(
+            ErrorMessage ="Цената на услугата трябва да е минимум 5 лева.",
+            AdditionalFields = "__RequestVerificationToken",
+            HttpMethod ="post",  
+            PageHandler ="CheckPrice"
+        )]
         public decimal Price { get; set; }
+        
         [BindProperty, Required]
         public string Type { get; set; }
         
@@ -58,6 +68,16 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
             }, accessToken);
 
             return RedirectToPage("./Index");
+        }
+        
+        public JsonResult OnPostCheckPrice()
+        {
+            bool valid = true;
+            if (Price < 5)
+            {
+                valid = false;
+            }
+            return new JsonResult(valid);
         }
     }
 }

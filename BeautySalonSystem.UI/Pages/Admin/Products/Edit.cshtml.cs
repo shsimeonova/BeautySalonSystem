@@ -5,7 +5,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using BeautySalonSystem.UI.Models;
+using BeautySalonSystem.UI.Services;
 using BeautySalonSystem.UI.Util;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,25 +18,34 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
 {
     public class Edit : PageModel
     {
-        private string _productsBaseUrl;
+        private IProductsService _productsService;
         private readonly HttpClient _client;
 
-        public Edit(IConfiguration configuration)
+        public Edit(IConfiguration configuration, IProductsService productsService)
         {
             Configuration = configuration;
-            _productsBaseUrl = Configuration.GetSection("Services:Products:Url").Value + "products";
+            _productsService = productsService;
             _client = new HttpClient();
         }
         
         public IConfiguration Configuration { get; }
         
         [BindProperty]
-        public string Id { get; set; }
+        public int Id { get; set; }
+        
+        [BindProperty, Required, MinLength(3)]
+        public string Name { get; set; }
         
         [BindProperty, Required]
-        public string Name { get; set; }
-        [BindProperty, Required]
+        [PageRemote(
+            ErrorMessage ="Цената на услугата трябва да е минимум 5 лева.",
+            AdditionalFields = "__RequestVerificationToken",
+            PageName = "./Create",
+            HttpMethod ="post",  
+            PageHandler ="CheckPrice"
+        )]
         public decimal Price { get; set; }
+        
         [BindProperty, Required]
         public string Type { get; set; }
 
@@ -44,34 +55,28 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
 
         public void OnGet(int id)
         {
-            var token = HttpContext.Request.Headers["Authorization"];
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var getProductResponse = _client.GetAsync(_productsBaseUrl + $"/{id}").Result;
-            ViewModel = JsonConvert.DeserializeObject<ProductViewModel>(getProductResponse.Content.ReadAsStringAsync().Result);
-            
-            var getProductTypesResponse = _client.GetAsync(_productsBaseUrl + "/types").Result;
-            var getProductTypesResponseContent = JsonConvert.DeserializeObject<IEnumerable<string>>(getProductTypesResponse.Content.ReadAsStringAsync().Result);
-            TypeOptions = getProductTypesResponseContent.Select(type =>
+            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
+            ViewModel = _productsService.GetById(id, accessToken);
+
+            var getProductTypesResponse = _productsService.GetProductTypes(accessToken);
+            TypeOptions = getProductTypesResponse.Select(type =>
                 new SelectListItem
                 {
                     Value = type,
                     Text = type
                 }).ToList();
-            Console.WriteLine();
         }
 
         public IActionResult OnPost()
         {
-            var token = HttpContext.Request.Headers["Authorization"];
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            
-            var content = new JsonContent(new {
-                Name = this.Name,
-                Price = this.Price,
-                Type = this.Type
-            });
-            
-            var getProductResponse = _client.PutAsync(_productsBaseUrl + $"/{Id}", content).Result;
+            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
+            _productsService.Edit(new ProductEditViewModel
+            {
+                Id = Id,
+                Name = Name,
+                Price =  Price,
+                Type = Type
+            }, accessToken);
             return RedirectToPage("./Index");
         }
     }

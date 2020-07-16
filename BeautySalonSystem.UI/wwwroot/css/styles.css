@@ -10333,3 +10333,7 @@ form .row:first-child .floating-label-form-group {
 .admin-products-actions-item {
   margin: 0.5rem;
 }
+
+.validation-message-span {
+  color: red;
+}

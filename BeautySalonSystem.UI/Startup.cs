@@ -76,7 +76,7 @@ namespace BeautySalonSystem.UI
             services.AddTransient<IProductsService, ProductsService>();
             services.AddTransient<IOffersService, OffersService>();
             services.AddSingleton<ISessionHelper, SessionHelper>();
-            
+
             services.AddRazorPages();
         }
 

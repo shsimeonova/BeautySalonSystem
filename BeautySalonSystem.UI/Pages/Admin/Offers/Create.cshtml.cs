@@ -29,10 +29,17 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
             _sessionHelper = sessionHelper;
         }
 
-        [BindProperty, Required]
+        [BindProperty]
+        [Required, MinLength(3)]
         public string Name { get; set; }
         
         [BindProperty, Required]
+        [PageRemote(
+            ErrorMessage ="Датата на валидност не може да бъде в миналото.",
+            AdditionalFields = "__RequestVerificationToken", 
+            HttpMethod ="post",  
+            PageHandler ="CheckExpiryDateIsBeforeNow"
+        )]
         public string ExpiryDate { get; set; }
         
         [BindProperty]
@@ -59,18 +66,26 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
         public IActionResult OnPost()
         {
             IEnumerable<ProductViewModel> allProducts = (IEnumerable<ProductViewModel>)_sessionHelper.GetItem("AllProducts");
+            var totalPrice = allProducts
+                .Where(vm => SelectedProductsIds.Contains(vm.Id))
+                .Sum(p => p.Price);
             var createOfferInput = new CreateOfferInputModel
             {
                 Name = this.Name,
                 ProductIds = this.SelectedProductsIds.ToArray(),
-                TotalPrice = allProducts
-                                .Where(vm => SelectedProductsIds.Contains(vm.Id))
-                                .Sum(p => p.Price),
+                TotalPrice = totalPrice,
                 ExpiryDate = this.ExpiryDate
             };
             
             _sessionHelper.AddRenewItem("CreateOfferInput", createOfferInput);
             return RedirectToPage("./Preview");
+        }
+        
+        public JsonResult OnPostCheckExpiryDateIsBeforeNow()
+        {
+            var expiryDateInput = DateTime.ParseExact(ExpiryDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+            var isBeforeNow = expiryDateInput > DateTime.Now;
+            return new JsonResult(isBeforeNow);
         }
     }
 }

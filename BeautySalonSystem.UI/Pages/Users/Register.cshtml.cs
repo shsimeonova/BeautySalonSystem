@@ -10,7 +10,5 @@ namespace BeautySalonSystem.UI.Pages
         {
             return new ChallengeResult("oidc");
         }
-        
-        
     }
 }

@@ -24,19 +24,25 @@
 </div>
 
 <div class="container col-6">
-    <form method="post">
+    <form method="post" id="create-offer-form">
         <div class="form-group">
-            <label asp-for="Name" class="col-form-label col-md-3">Име</label>
-            <input type="text" class="form-control" asp-for="Name">
+            <label asp-for="Name" class="col-form-label col">*Име</label>
+            <span asp-validation-for="Name"></span>
+            <input type="text" class="form-control" asp-for="Name" data-val="true" 
+                   data-val-minlength="Името на офертата трябва да е минимум 3 символа."
+                   data-val-required="Полето е задължително.">
         </div>
         <div class="form-group">
-            <label asp-for="ExpiryDate" class="col-form-label col-md-3">Активна до:</label>
-            <input type="date" class="form-control datetime-local" asp-for="ExpiryDate">
+            <label asp-for="ExpiryDate" class="col-form-label col">*Активна до:</label>
+            <span asp-validation-for="ExpiryDate"></span>
+            <input type="date" class="form-control datetime-local" asp-for="ExpiryDate" id="offer-expiry-date" data-val="true" min='@DateTime.Now.ToString("dd/MM/yyyy")'>
         </div>
         <div class="row">
             <div class="col">
                 <div class="form-group">
-                    <select asp-items="Model.Products" asp-for="SelectedProductsIds" class="selectpicker form-control" data-live-search="true" data-actions-box="true" multiple></select>
+                    <label asp-for="SelectedProductsIds" class="col-form-label col">*Включени продукти:</label>
+                    <span asp-validation-for="SelectedProductsIds"></span>
+                    <select asp-items="Model.Products" asp-for="SelectedProductsIds" class="selectpicker form-control" data-live-search="true" data-actions-box="true" multiple data-val="true"></select>
                 </div>
             </div>
         </div>

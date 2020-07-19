@@ -52,6 +52,13 @@ namespace IdentityServerHost.Quickstart.UI
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
+            var authParams = (await this._interaction.GetAuthorizationContextAsync(returnUrl)).Parameters;
+            bool isRegister = authParams["action"].Equals("register");
+
+            if (isRegister)
+            {
+                return this.RedirectToAction(nameof(this.Register), new {returnUrl});
+            }
             // build a model so we know what to show on the login page
             var vm = await BuildLoginViewModelAsync(returnUrl);
 

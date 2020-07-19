@@ -4,17 +4,17 @@ using BeautySalonSystem.UI.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BeautySalonSystem.UI.Pages.Admin.Offers
+namespace BeautySalonSystem.UI.Pages.Offers
 {
-    public class AdminOffersIndex : PageModel
+    public class Index : PageModel
     {
-        private IOffersService offersService;
-
-        public AdminOffersIndex(IOffersService offersService)
+        IOffersService offersService;
+        
+        public Index(IOffersService offersService)
         {
             this.offersService = offersService;
         }
-
+        
         public IEnumerable<ViewOfferOutputModel> AllOffers { get; set; }
         
         public void OnGet()

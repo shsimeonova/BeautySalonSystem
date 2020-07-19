@@ -38,7 +38,6 @@ namespace BeautySalonSystem.Products.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IEnumerable<GetOfferModel> ListByProductId([FromQuery(Name = "productId")] int productId)
         {
             if (productId == 0)

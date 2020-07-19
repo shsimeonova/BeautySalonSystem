@@ -10337,3 +10337,7 @@ form .row:first-child .floating-label-form-group {
 .validation-message-span {
   color: red;
 }
+
+.offer-card {
+  margin: 1rem 0.5rem 1rem 0.5rem;
+}

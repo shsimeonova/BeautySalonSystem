@@ -28,22 +28,14 @@ namespace BeautySalonSystem.UI.Pages
         public string Password { get; set; }
         public string Message { get; set; }
 
-        public async Task<IActionResult> OnGet(string returnUrl = "/Index")
+        public async Task<IActionResult> OnGet()
         {
-            // if (User.IsAuthenticated())
-            // {
-            //     if (returnUrl.Contains("handler"))
-            //     {
-            //         var pageName = returnUrl.Split("?handler=").First();
-            //         var pageHandler = returnUrl.Splitll("?handler=").Last();
-            //         return RedirectToPage(pageName, pageHandler);
-            //     }
-            //     
-            //     return RedirectToPage(returnUrl);
-            // }
+            var authProperies = new AuthenticationProperties();
             
-            return new ChallengeResult("oidc", new AuthenticationProperties() { RedirectUri = returnUrl });
-            // return new ChallengeResult("oidc");
+            authProperies.RedirectUri = "/";
+            authProperies.Items.Add("action", "login");
+            
+            return new ChallengeResult("oidc", authProperies);
         }
     }
 }

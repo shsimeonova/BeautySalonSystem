@@ -11,7 +11,7 @@ namespace BeautySalonSystem.UI.Services
 {
     public interface IOffersService
     {
-        IEnumerable<ViewOfferOutputModel> GetAll(string accessToken);
+        IEnumerable<ViewOfferOutputModel> GetAll();
         void Create(CreateOfferInputModel input, string accessToken);
     }
     
@@ -29,9 +29,8 @@ namespace BeautySalonSystem.UI.Services
         
         public IConfiguration Configuration { get; }
 
-        public IEnumerable<ViewOfferOutputModel> GetAll(string accessToken)
+        public IEnumerable<ViewOfferOutputModel> GetAll()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var response = _client.GetAsync(_offersBaseUrl).Result;
             string responseBody = response.Content.ReadAsStringAsync().Result;
             var allOffers = JsonConvert.DeserializeObject<IEnumerable<ViewOfferOutputModel>>(responseBody);

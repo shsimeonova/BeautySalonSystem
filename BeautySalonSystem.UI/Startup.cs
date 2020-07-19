@@ -64,6 +64,10 @@ namespace BeautySalonSystem.UI
                     options.Events.OnRedirectToIdentityProvider = context =>
                     {
                         context.ProtocolMessage.Prompt = "login";
+                        if (context.Properties.Items.ContainsKey("action"))
+                        {
+                            context.ProtocolMessage.SetParameter("action", context.Properties.Items["action"]);
+                        }
                         return Task.CompletedTask;
                     };
                 });
@@ -110,7 +114,7 @@ namespace BeautySalonSystem.UI
             });
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages().RequireAuthorization();
+                endpoints.MapRazorPages();
             });
         }
     }

@@ -23,7 +23,6 @@ namespace BeautySalonSystem.Products.Data
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult List()
         {
             var products = _repository.GetAll();

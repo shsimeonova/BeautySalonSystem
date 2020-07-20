@@ -13,6 +13,8 @@ namespace BeautySalonSystem.Appointments.Data.Models
 
         public DateTime Date { get; set; }
 
-        public string ProductOfferId { get; set; }
+        public int OfferId { get; set; }
+        
+        public bool IsConfirmed { get; set; }
     }
 }

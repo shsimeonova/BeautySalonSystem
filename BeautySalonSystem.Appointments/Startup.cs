@@ -1,5 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
+using BeautySalonSystem.Appointments.Data;
+using BeautySalonSystem.Appointments.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,22 +22,8 @@ namespace BeautySalonSystem.Appointments
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             var connStr = this.Configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
-            // services
-            //     .AddDbContext<ProductsDbContext>(opt => opt.UseSqlServer(connStr))
-            //     .AddTransient<IProductsRepository, ProductsRepository>()
-            //     .AddTransient<IProductOffersRepository, ProductOffersRepository>()
-            //     .AddTransient<IOffersRepository, OffersRepository>()
-            //     .AddTransient<IOffersService, OffersService>();
-
-
-            // var mappingConfig = new MapperConfiguration(mc =>
-            // {
-            //     mc.AddProfile(new ProductsProfile());
-            //     mc.AddProfile(new OffersProfile());
-            // });
-
-            // IMapper mapper = mappingConfig.CreateMapper();
-            // services.AddSingleton(mapper);
+            services.AddDbContext<AppointmentsDbContext>(opt => opt.UseSqlServer(connStr));
+            services.AddTransient<IAppointmentsRepository, AppointmentsRepository>();
             
             var SecretKey = this.Configuration.GetSection("ApplicationSettings:Secret").Value;
 

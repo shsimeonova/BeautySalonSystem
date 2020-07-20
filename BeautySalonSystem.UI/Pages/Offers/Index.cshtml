@@ -20,23 +20,20 @@
 </header>
 
 <div class="container row">
-  @foreach (var offer in Model.AllOffers) {
-    <div class="card offer-card col-md-4" style="width: 18rem;">
-      <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Earth_Icon.png" alt="Image">
-      <div class="card-body">
-        <h5 class="card-title">@offer.Name</h5>
-        @* <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> *@
-      </div>
-      <ul class="list-group list-group-flush">
-        @foreach (var product in @offer.Products)
-        {
-          <li class="list-group-item">@product.Name</li>
-        }
-      </ul>
-      <form class="card-body" asp-page="/Appointments/Index" method="post">
-        <input name="offerId" type="hidden" value="@offer.Id"/>
-        <button class="btn btn-primary">Запази час</button>
-      </form>
-    </div>
-  }
+    @foreach (var offer in Model.AllOffers) {
+        <div class="card offer-card col-md-4" style="width: 18rem;">
+            <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Earth_Icon.png" alt="Image">
+            <div class="card-body">
+                <h5 class="card-title">@offer.Name</h5>
+                @* <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> *@
+            </div>
+            <ul class="list-group list-group-flush">
+                @foreach (var product in @offer.Products)
+                {
+                    <li class="list-group-item">@product.Name</li>
+                }
+            </ul>
+            <a class="btn btn-primary text-white" asp-page="/Appointments/Index" asp-route-id="@offer.Id">Запази час</a>
+        </div>
+    }
 </div>

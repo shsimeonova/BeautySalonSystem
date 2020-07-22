@@ -100,5 +100,20 @@ namespace BeautySalonSystem.Products.Controllers
             }
             return Ok();
         }
+        
+        [HttpGet("{offerId}/duration")]
+        [Authorize]
+        public IActionResult GetTotalDuration(int offerId)
+        {
+            try
+            {
+                int duration = _offersService.GetTotalDuration(offerId);
+                return Ok(duration);
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
+        }
     }
 }

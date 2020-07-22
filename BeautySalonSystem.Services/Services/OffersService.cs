@@ -16,6 +16,7 @@ namespace BeautySalonSystem.Products.Services
         public GetOfferModel GetById(int id);
         public IEnumerable<GetOfferModel> GetManyByIds(bool activeOnly, int[] id);
         public void Activate(int id);
+        public int GetTotalDuration(int id);
         public int Create(CreateProductOfferInputModel input, string currentUserId);
         void Delete(int id);
     } 
@@ -95,6 +96,18 @@ namespace BeautySalonSystem.Products.Services
             offer.IsActive = true;
             _offersRepository.Update(offer);
             _offersRepository.SaveChanges();
+        }
+
+        public int GetTotalDuration(int id)
+        {
+            var offer = _offersRepository.GetById(id);
+            if (offer == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            int duration = offer.ProductOffers.Select(po => po.Product).Sum(product => product.Duration);
+            return duration;
         }
 
         public int Create(CreateProductOfferInputModel input, string currentUserId)

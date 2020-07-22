@@ -53,7 +53,8 @@ namespace BeautySalonSystem.Products.Data
                 Name = input.Name,
                 Price = input.Price,
                 Type = (ProductType)Enum.Parse(typeof(ProductType), input.Type),
-                ProductOffers = new List<ProductOffer>()
+                ProductOffers = new List<ProductOffer>(),
+                Duration = input.Duration
             };
 
             _repository.Add(product);

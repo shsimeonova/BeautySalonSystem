@@ -10,5 +10,7 @@ namespace BeautySalonSystem.Products.Models
         public string Name { get; set; }
         public decimal Price { get; set; }
         public String Type { get; set; }
+        
+        public int Duration { get; set; }
     }
 }

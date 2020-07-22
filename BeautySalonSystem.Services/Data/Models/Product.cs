@@ -14,6 +14,7 @@ namespace BeautySalonSystem.Products.Data.Models
         public ProductType Type { get; set; }
         public IEnumerable<ProductOffer> ProductOffers { get; set; }
         
+        public int Duration { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

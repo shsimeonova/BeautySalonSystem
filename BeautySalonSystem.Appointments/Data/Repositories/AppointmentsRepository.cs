@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BeautySalonSystem.Appointments.Data.Models;
@@ -8,15 +9,14 @@ namespace BeautySalonSystem.Appointments.Data.Repositories
     public interface IAppointmentsRepository
     {
         void Add(Appointment item);
-
-        IEnumerable<AppointmentDto> GetAll();
-
+        IEnumerable<Appointment> GetAll();
+        IEnumerable<Appointment> GetAllConfirmed();
+        IEnumerable<Appointment> GetAllNonConfirmed();
         Appointment GetByID(int id);
-        
-        IEnumerable<Appointment> GetConfirmedByCustomerId(string customerId);
-
+        IEnumerable<Appointment> GetByCustomerId(string customerId);
+        IEnumerable<Appointment> GetByCustomerIdConfirmed(string customerId);
+        IEnumerable<Appointment> GetByCustomerIdNonConfirmed(string customerId);
         void Update(Appointment item);
-
         bool SaveChanges();
     }
     
@@ -39,9 +39,23 @@ namespace BeautySalonSystem.Appointments.Data.Repositories
             _context.Appointments.Add(item);
         }
 
-        public IEnumerable<AppointmentDto> GetAll()
+        public IEnumerable<Appointment> GetAll()
         {
-            throw new System.NotImplementedException();
+            return _context.Appointments.ToList();
+        }
+        
+        public IEnumerable<Appointment> GetAllConfirmed()
+        {
+            var query = _context.Appointments.Select(a => a).Where(a => a.IsConfirmed);
+
+            return query.ToList();
+        }
+        
+        public IEnumerable<Appointment> GetAllNonConfirmed()
+        {
+            var query = _context.Appointments.Select(a => a).Where(a => !a.IsConfirmed);
+
+            return query.ToList();
         }
 
         public Appointment GetByID(int id)
@@ -50,11 +64,28 @@ namespace BeautySalonSystem.Appointments.Data.Repositories
             return result;
         }
 
-        public IEnumerable<Appointment> GetConfirmedByCustomerId(string customerId)
+        public IEnumerable<Appointment> GetByCustomerId(string customerId)
         {
-            var query = _context.Appointments.Where(a => a.CustomerId == customerId);
-            query = query.Where(a => a.IsConfirmed);
-            
+            var query = _context.Appointments
+                .Where(a => a.CustomerId == customerId);
+
+            return query.ToList();
+        }
+        public IEnumerable<Appointment> GetByCustomerIdConfirmed(string customerId)
+        {
+            var query = _context.Appointments
+                .Where(a => a.CustomerId == customerId)
+                .Where(a => a.IsConfirmed);
+
+            return query.ToList();
+        }
+
+        public IEnumerable<Appointment> GetByCustomerIdNonConfirmed(string customerId)
+        {
+            var query = _context.Appointments
+                .Where(a => a.CustomerId == customerId)
+                .Where(a => !a.IsConfirmed);
+
             return query.ToList();
         }
 

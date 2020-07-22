@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using BeautySalonSystem.Appointments.Data.Models;
 using BeautySalonSystem.Appointments.Data.Repositories;
 using BeautySalonSystem.Controllers;
@@ -20,14 +23,55 @@ namespace BeautySalonSystem.Appointments.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult List([FromQuery] string customerId)
+        public IActionResult List()
         {
-            // if (string.IsNullOrWhiteSpace(customerId))
-            // {
-            //     return BadRequest("Customer id cannot be null or empty.");
-            // }
+            var appointments = _repository.GetAll();
 
-            var appointments = _repository.GetConfirmedByCustomerId(customerId);
+            return Ok(appointments);
+        }
+        
+        [HttpGet("confirmed")]
+        [Authorize]
+        public IActionResult ListConfirmed()
+        {
+            var appointments = _repository.GetAllConfirmed();
+
+            return Ok(appointments);
+        }
+        
+        [HttpGet("non-confirmed")]
+        [Authorize]
+        public IActionResult ListNonConfirmed()
+        {
+            var appointments = _repository.GetAllNonConfirmed();
+
+            return Ok(appointments);
+        }
+        
+        [HttpGet("customers/{customerId}")]
+        [Authorize]
+        public IActionResult List(string customerId)
+        {
+            var appointments = _repository.GetByCustomerId(customerId);
+
+            return Ok(appointments);
+        }
+        
+        [HttpGet("customers/{customerId}/confirmed")]
+        [Authorize]
+        public IActionResult ListConfirmed(string customerId)
+        {
+            var appointments = _repository.GetByCustomerIdConfirmed(customerId);
+
+            return Ok(appointments);
+        }
+        
+        [HttpGet("customers/{customerId}/non-confirmed")]
+        [Authorize]
+        public IActionResult ListNonConfirmed(string customerId)
+        {
+            var appointments = _repository.GetByCustomerIdNonConfirmed(customerId);
+
             return Ok(appointments);
         }
 
@@ -61,5 +105,23 @@ namespace BeautySalonSystem.Appointments.Controllers
             return Ok();
         }
 
+        [HttpPost("check-time")]
+        public IActionResult CheckIsAppointmentRequestTimeFree(CheckAppointmentRequestTimeInputModel input)
+        {
+            var appointments = _repository.GetAll();
+            var closestAppointment = appointments
+                .OrderBy(a => Math.Abs((a.Date - input.appointmentRequestTime).Ticks))
+                .First();
+
+            double difference = Math.Abs(input.appointmentRequestTime.Subtract(closestAppointment.Date).TotalMinutes);
+
+            if (difference < input.appointmentRequestDuration)
+            {
+                return Ok(false);
+            }
+            
+            return Ok(true);
+        }
+        
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using BeautySalonSystem.Products.Data;
 using BeautySalonSystem.Products.Data.Models;
@@ -11,8 +12,12 @@ namespace BeautySalonSystem.Products.Services
 {
     public interface IOffersService
     {
-        public IEnumerable<GetOfferModel> GetAll();
+        public IEnumerable<GetOfferModel> GetAll(bool activeOnly);
+        public GetOfferModel GetById(int id);
+        public IEnumerable<GetOfferModel> GetManyByIds(bool activeOnly, int[] id);
+        public void Activate(int id);
         public int Create(CreateProductOfferInputModel input, string currentUserId);
+        void Delete(int id);
     } 
     
     public class OffersService : IOffersService
@@ -34,18 +39,62 @@ namespace BeautySalonSystem.Products.Services
             _mapper = mapper;
         }
 
-        public IEnumerable<GetOfferModel> GetAll()
+        public IEnumerable<GetOfferModel> GetAll(bool activeOnly)
         {
-            IEnumerable<OfferDto> allOffers = _offersRepository.GetAll();
+            IEnumerable<OfferDto> allOffers = _offersRepository.GetAll(activeOnly);
             List<GetOfferModel> result = new List<GetOfferModel>();
             foreach (var offer in allOffers)
             {
                 GetOfferModel mappedOffer = _mapper.Map<OfferDto, GetOfferModel>(offer);
                 result.Add(mappedOffer);
-                Console.WriteLine();
             }
 
             return result;
+        }
+
+        public GetOfferModel GetById(int id)
+        {
+            Offer offer = _offersRepository.GetById(id);
+            var result = new OfferDto()
+            {
+                Id = offer.Id,
+                Name = offer.Name,
+                Discount = offer.Discount,
+                TotalPrice = offer.TotalPrice,
+                ExpiryDate = offer.ExpiryDate,
+                AddedById = offer.AddedById,
+                Products = _productsRepository.GetAllByOffer(offer),
+                IsActive = offer.IsActive
+            };
+            
+            return _mapper.Map<OfferDto, GetOfferModel>(result);
+        }
+
+        public IEnumerable<GetOfferModel> GetManyByIds(bool activeOnly, int[] ids)
+        {
+            var allOffers = this._offersRepository.GetAllByIds(activeOnly, ids);
+            List<GetOfferModel> result = new List<GetOfferModel>();
+            foreach (var offer in allOffers)
+            {
+                GetOfferModel mappedOffer = _mapper.Map<OfferDto, GetOfferModel>(offer);
+                result.Add(mappedOffer);
+            }
+
+            return result;
+        }
+
+        public void Activate(int id)
+        {
+            var offer = _offersRepository.GetById(id);
+
+            if (offer == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            offer.IsActive = true;
+            _offersRepository.Update(offer);
+            _offersRepository.SaveChanges();
         }
 
         public int Create(CreateProductOfferInputModel input, string currentUserId)
@@ -55,7 +104,7 @@ namespace BeautySalonSystem.Products.Services
             Offer offer = new Offer
             {
                 Name = input.Name,
-                TotalPrice = input.TotalPrice,
+                TotalPrice = decimal.Round(input.TotalPrice),
                 Discount = input.Discount,
                 ExpiryDate = DateTime.ParseExact(input.ExpiryDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
                 AddedById = currentUserId
@@ -77,6 +126,19 @@ namespace BeautySalonSystem.Products.Services
             }
 
             return offer.Id;
+        }
+
+        public void Delete(int id)
+        {
+            var offer = _offersRepository.GetById(id);
+
+            if (offer == null)
+            {
+                throw new ArgumentNullException();
+            }
+            
+            _offersRepository.Delete(offer);
+            _offersRepository.SaveChanges();
         }
     }
 }

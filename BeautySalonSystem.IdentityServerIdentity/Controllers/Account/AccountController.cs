@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityServerAspNetIdentity.Quickstart.Account;
 
@@ -164,6 +165,17 @@ namespace IdentityServerHost.Quickstart.UI
                     EmailConfirmed = true
                 };
                 var result = _userManager.CreateAsync(user, model.Password).Result;
+                if (!result.Succeeded)
+                {
+                    throw new Exception(result.Errors.First().Description);
+                }
+                
+                result = _userManager.AddClaimsAsync(user, new Claim[]{
+                    new Claim(JwtClaimTypes.PreferredUserName, user.UserName),
+                    new Claim(JwtClaimTypes.Role, "User"),
+                    new Claim(JwtClaimTypes.Email, user.Email),
+                    new Claim(JwtClaimTypes.Name, $"{model.FirstName} {model.LastName}")
+                }).Result;
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError(string.Empty, result.Errors.First().Description);

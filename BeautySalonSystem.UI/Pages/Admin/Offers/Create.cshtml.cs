@@ -69,7 +69,7 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
             var totalPrice = allProducts
                 .Where(vm => SelectedProductsIds.Contains(vm.Id))
                 .Sum(p => p.Price);
-            var createOfferInput = new CreateOfferInputModel
+            var createOfferInput = new OfferCreateInputModel
             {
                 Name = this.Name,
                 ProductIds = this.SelectedProductsIds.ToArray(),

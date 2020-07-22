@@ -13,5 +13,7 @@ namespace BeautySalonSystem.Products.Data.Models
         public decimal Price { get; set; }
         public ProductType Type { get; set; }
         public IEnumerable<ProductOffer> ProductOffers { get; set; }
+        
+        public bool IsDeleted { get; set; }
     }
 }

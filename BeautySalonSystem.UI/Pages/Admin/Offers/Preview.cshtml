@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Preview Offer";
-    var selectedIds = Model.CreateOfferInput.ProductIds;
+    var selectedIds = Model.OfferCreateInput.ProductIds;
 }
 
 <header class="masthead-admin bg-primary text-white text-center">
@@ -25,9 +25,9 @@
 </div>
 
 <div class="container col-6">
-    <form method="post" onsubmit="removeSelectedProductsDisabled()">
+    <form method="post" onsubmit="removeSelectedProductsDisabled(this)">
         <div class="form-group">
-            <label asp-for="@Model.CreateOfferInput.Name" class="col-form-label col-md-4">Име</label>
+            <label asp-for="@Model.OfferCreateInput.Name" class="col-form-label col-md-4">Име</label>
             <span asp-validation-for="Name"></span>
             <input type="text" class="form-control" asp-for="@Model.Name"
                    data-val="true" 
@@ -37,7 +37,10 @@
         <div class="row">
             <div class="col">
                 <div class="form-group">
-                    <select id="items-select" asp-items="@Model.Products" asp-for="@Model.CreateOfferInput.ProductIds" class="selectpicker form-control" multiple disabled></select>
+                    <select id="items-select"
+                            asp-items="@Model.Products"
+                            asp-for="@Model.OfferCreateInput.ProductIds" class="selectpicker form-control" multiple disabled>
+                    </select>
                 </div>
             </div>
         </div>
@@ -46,9 +49,9 @@
             <span asp-validation-for="TotalPrice"></span>
             <input type="text" id="preview-total-price" class="form-control" asp-for="TotalPrice" data-val="true"/>
         </div>
-        <input type="hidden" id="total-price-default" value="@Model.CreateOfferInput.TotalPrice">
+        <input type="hidden" id="total-price-default" value="@Model.OfferCreateInput.TotalPrice">
         <div class="form-group">
-            <label asp-for="@Model.CreateOfferInput.ExpiryDate" class="col-form-label col-md-3">Активна до:</label>
+            <label asp-for="@Model.OfferCreateInput.ExpiryDate" class="col-form-label col-md-3">Активна до:</label>
             <input type="date" class="form-control datetime-local" asp-for="@Model.ExpiryDate">
         </div>
         <div class="form-group">
@@ -64,7 +67,7 @@
             var totalPrice = Number(document.getElementById('total-price-default').value);
             var totalPriceInput = document.getElementById('preview-total-price');
             var calculatedDiscount = 0;
-            
+        
             console.log("discount value: " + discountValue)
             if (discountValue !== 0) {
                 document.getElementById('total-price-default').value;
@@ -79,6 +82,7 @@
           
           function removeSelectedProductsDisabled() {
               document.getElementById('items-select').disabled = false;
+              this.submit()
           }
         </script>
         <div class="form-group">

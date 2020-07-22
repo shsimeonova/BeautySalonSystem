@@ -15,11 +15,11 @@ namespace BeautySalonSystem.UI.Pages.Offers
             this.offersService = offersService;
         }
         
-        public IEnumerable<ViewOfferOutputModel> AllOffers { get; set; }
+        public IEnumerable<OfferViewModel> AllOffers { get; set; }
         
         public void OnGet()
         {
-            var result = offersService.GetAll();
+            var result = offersService.GetAllActive();
             AllOffers = result;
         }
     }

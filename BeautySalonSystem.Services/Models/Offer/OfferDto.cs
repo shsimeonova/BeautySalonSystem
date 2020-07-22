@@ -13,5 +13,6 @@ namespace BeautySalonSystem.Products.Models
         public string AddedById { get; set; }
         public DateTime ExpiryDate { get; set; }
         public IEnumerable<Product> Products { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -11,5 +11,7 @@ namespace BeautySalonSystem.Products.Data.Models
         public int OfferId { get; set; }
         public Product Product { get; set; }
         public Offer Offer { get; set; }
+        
+        public bool IsDeleted { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BeautySalonSystem.UI.Models
 {
-    public class CreateOfferInputModel
+    public class OfferCreateInputModel
     {
         public string Name { get; set; }
         public int[] ProductIds { get; set; }

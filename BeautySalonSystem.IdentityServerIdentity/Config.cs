@@ -15,7 +15,8 @@ namespace IdentityServerAspNetIdentity
            {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResource("role", new[] { "role" })
+                new IdentityResource("role", new[] { "role" }),
+                new IdentityResource("email", new[] { "email" })
            };
 
         public static IEnumerable<ApiScope> ApiScopes =>
@@ -40,8 +41,6 @@ namespace IdentityServerAspNetIdentity
 
                     AllowedScopes = { "scope1" }
                 },
-
-                // interactive client using code flow + pkce
                 new Client
                 {
                     ClientId = "BeautySalonSystem.UI",
@@ -59,24 +58,8 @@ namespace IdentityServerAspNetIdentity
                     RefreshTokenExpiration = TokenExpiration.Sliding,
                     AlwaysIncludeUserClaimsInIdToken = true,
                     AllowOfflineAccess = true,
-                    AllowedScopes = { "openid", "profile", "scope2", "role", "ms" }
+                    AllowedScopes = { "openid", "profile", "scope2", "role", "ms", "email" }
                 }
-                // new Client
-                // {
-                //     ClientId = "BeautySalonSystem.Products",
-                //     ClientSecrets = { new Secret("Valt1n3r_01234567".Sha256()) },
-                //     
-                //     AllowedGrantTypes = GrantTypes.Hybrid,
-                //     AccessTokenLifetime = 60 * 2,
-                //     IdentityTokenLifetime = 60 * 2,
-                //
-                //     RedirectUris = { "https://localhost:4009/signin-oidc" },
-                //     FrontChannelLogoutUri = "https://localhost:4009/signout-oidc",
-                //     PostLogoutRedirectUris = { "https://localhost:4009/signout-callback-oidc" },
-                //
-                //     AllowOfflineAccess = false,
-                //     AllowedScopes = { "openid", "profile", "scope2", "role" }
-                // },
             };
     }
 }

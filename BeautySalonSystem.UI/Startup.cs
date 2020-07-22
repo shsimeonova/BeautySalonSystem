@@ -56,10 +56,12 @@ namespace BeautySalonSystem.UI
                     options.ResponseType = "code";
                     options.SaveTokens = true;
                     options.Scope.Add("role");
+                    options.Scope.Add("email");
                     options.Scope.Add("ms");
                     options.SaveTokens = true;
                     options.UseTokenLifetime = true;
                     options.ClaimActions.MapJsonKey("role", "role");
+                    options.ClaimActions.MapJsonKey("email", "email");
                     options.GetClaimsFromUserInfoEndpoint = true;
                     options.Events.OnRedirectToIdentityProvider = context =>
                     {
@@ -102,17 +104,6 @@ namespace BeautySalonSystem.UI
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.Use(async (context, next) =>
-            {
-                // if (context.User.Identity.IsAuthenticated)
-                // {
-                //     var authItems = (await context.AuthenticateAsync()).Properties.Items;
-                //     var token = authItems.FirstOrDefault(item => item.Key.Equals(".Token.access_token")).Value;
-                //     context.Request.Headers.Add("Authorization", token);
-                // }
-                
-                await next();
-            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

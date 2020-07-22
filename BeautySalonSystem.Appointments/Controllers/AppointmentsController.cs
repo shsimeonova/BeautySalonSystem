@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeautySalonSystem.Appointments.Controllers
 {
-    
+
     public class AppointmentsController : ApiController
     {
         private IAppointmentsRepository _repository;
@@ -20,12 +20,17 @@ namespace BeautySalonSystem.Appointments.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult List()
+        public IActionResult List([FromQuery] string customerId)
         {
-            Console.WriteLine();
-            return null;
+            // if (string.IsNullOrWhiteSpace(customerId))
+            // {
+            //     return BadRequest("Customer id cannot be null or empty.");
+            // }
+
+            var appointments = _repository.GetConfirmedByCustomerId(customerId);
+            return Ok(appointments);
         }
-        
+
         [HttpPost]
         [Authorize]
         public IActionResult CreateAppointmentRequest(AppointmentCreateInputModel input)
@@ -37,11 +42,24 @@ namespace BeautySalonSystem.Appointments.Controllers
                 Date = input.Date,
                 IsConfirmed = false
             };
-            
+
             _repository.Add(appointment);
             _repository.SaveChanges();
 
             return Ok(appointment.Id);
         }
+
+        [HttpPost("{id}")]
+        public IActionResult ConfirmAppointment(int id)
+        {
+            var appointment = _repository.GetByID(id);
+
+            appointment.IsConfirmed = true;
+            _repository.Update(appointment);
+            _repository.SaveChanges();
+
+            return Ok();
+        }
+
     }
 }

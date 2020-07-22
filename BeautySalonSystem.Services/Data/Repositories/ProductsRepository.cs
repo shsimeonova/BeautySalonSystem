@@ -18,6 +18,8 @@ namespace BeautySalonSystem.Products.Data
         IEnumerable<Product> GetAll();
 
         IEnumerable<Product> GetByIds(IEnumerable<int> ids);
+        
+        IEnumerable<Product> GetAllByOffer(Offer offer);
 
         Product GetByID(int id);
 
@@ -42,6 +44,11 @@ namespace BeautySalonSystem.Products.Data
             return products.ToList();
         }
 
+
+        public IEnumerable<Product> GetAllByOffer(Offer offer)
+        {
+            return offer.ProductOffers.Select(po => po.Product).ToList();
+        }
 
         public Product GetByID(int id)
         {
@@ -74,7 +81,8 @@ namespace BeautySalonSystem.Products.Data
             {
                 throw new ArgumentNullException();
             }
-            _context.Products.Remove(item);
+            item.IsDeleted = true;
+            Update(item);
         }
 
         public bool SaveChanges()

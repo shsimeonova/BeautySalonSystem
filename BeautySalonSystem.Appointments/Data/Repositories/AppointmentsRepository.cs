@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BeautySalonSystem.Appointments.Data.Models;
 
 namespace BeautySalonSystem.Appointments.Data.Repositories
@@ -8,11 +9,11 @@ namespace BeautySalonSystem.Appointments.Data.Repositories
     {
         void Add(Appointment item);
 
-        void Delete(Appointment item);
-
         IEnumerable<AppointmentDto> GetAll();
 
         Appointment GetByID(int id);
+        
+        IEnumerable<Appointment> GetConfirmedByCustomerId(string customerId);
 
         void Update(Appointment item);
 
@@ -38,11 +39,6 @@ namespace BeautySalonSystem.Appointments.Data.Repositories
             _context.Appointments.Add(item);
         }
 
-        public void Delete(Appointment item)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public IEnumerable<AppointmentDto> GetAll()
         {
             throw new System.NotImplementedException();
@@ -50,12 +46,21 @@ namespace BeautySalonSystem.Appointments.Data.Repositories
 
         public Appointment GetByID(int id)
         {
-            throw new System.NotImplementedException();
+            var result = _context.Appointments.Find(id);
+            return result;
+        }
+
+        public IEnumerable<Appointment> GetConfirmedByCustomerId(string customerId)
+        {
+            var query = _context.Appointments.Where(a => a.CustomerId == customerId);
+            query = query.Where(a => a.IsConfirmed);
+            
+            return query.ToList();
         }
 
         public void Update(Appointment item)
         {
-            throw new System.NotImplementedException();
+            _context.Update(item);
         }
 
         public bool SaveChanges()

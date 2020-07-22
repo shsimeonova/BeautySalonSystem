@@ -33,7 +33,7 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
         public IEnumerable<int> SelectedProductsIds { get; set; }
         
         [BindProperty]
-        public CreateOfferInputModel CreateOfferInput { get; set; }
+        public OfferCreateInputModel OfferCreateInput { get; set; }
         
         [BindProperty]
         [Required, MinLength(3)]
@@ -58,10 +58,10 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
         
         public void OnGet()
         {
-            CreateOfferInput = (CreateOfferInputModel) _sessionHelper.GetItem("CreateOfferInput");
-            Name = CreateOfferInput.Name;
-            TotalPrice = CreateOfferInput.TotalPrice;
-            ExpiryDate = CreateOfferInput.ExpiryDate;
+            OfferCreateInput = (OfferCreateInputModel) _sessionHelper.GetItem("CreateOfferInput");
+            Name = OfferCreateInput.Name;
+            TotalPrice = OfferCreateInput.TotalPrice;
+            ExpiryDate = OfferCreateInput.ExpiryDate;
             Products = ((IEnumerable<ProductViewModel>) _sessionHelper.GetItem("AllProducts"))
                 .Select(product =>
                     new SelectListItem
@@ -75,11 +75,11 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
         public async Task<IActionResult> OnPost()
         {
             var access_token = await HttpContext.GetTokenAsync("access_token");
-            CreateOfferInput.Name = Name;
-            CreateOfferInput.Discount = Discount;
-            CreateOfferInput.ExpiryDate = ExpiryDate;
-            CreateOfferInput.TotalPrice = decimal.Round(TotalPrice, 2);
-            offersService.Create(CreateOfferInput, access_token);
+            OfferCreateInput.Name = Name;
+            OfferCreateInput.Discount = Discount;
+            OfferCreateInput.ExpiryDate = ExpiryDate;
+            OfferCreateInput.TotalPrice = decimal.Round(TotalPrice, 2);
+            offersService.Create(OfferCreateInput, access_token);
             
             return RedirectToPage("./Index");
         }

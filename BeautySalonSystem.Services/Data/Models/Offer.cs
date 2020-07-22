@@ -18,8 +18,12 @@ namespace BeautySalonSystem.Products.Data.Models
 
         public DateTime ExpiryDate { get; set; }
 
-        public ICollection<ProductOffer> ProductOffers { get; set; }
+        public IEnumerable<ProductOffer> ProductOffers { get; set; }
 
         public string AddedById { get; set; }
+        
+        public bool IsActive { get; set; }
+        
+        public bool IsDeleted { get; set; }
     }
 }

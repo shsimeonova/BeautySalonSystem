@@ -31,6 +31,7 @@
       <th scope="col">Име</th>
       <th scope="col">Цена</th>
       <th scope="col">Отстъпка</th>
+      <th scope="col">Активна</th>
       <th scope="col">Включени услуги</th>
       <th scope="col">Действия</th>
     </tr>
@@ -45,19 +46,37 @@
               <td>@offer.Name</td>
               <td>@offer.TotalPrice</td>
               <td>@offer.Discount</td>
+              <td>@if (offer.IsActive)
+                  {
+                    <span>Активна</span>
+                  }
+                  else
+                  {
+                    <span>Неактивна</span>
+                  }
               <td>
                 @foreach (var product in @offer.Products)
                 {
                   <span>@product.Name;</span>
                 }
               </td>
-              @* <td class="admin-products-actions d-flex"> *@
-              @*   <form class="admin-products-actions-item" asp-page-handler="DeleteProduct" method="post"> *@
-              @*     <input name="id" type="hidden" value="@offer.Id"/> *@
-              @*     <button class="btn btn-danger">Изтрий</button> *@
-              @*   </form> *@
-              @*   <a class="btn btn-warning text-white admin-products-actions-item" asp-page="@Url.Page("/Admin/Products/Edit")" asp-route-id="@product.Id">Редактирай</a> *@
-              @* </td> *@
+              <td class="admin-products-actions d-flex">
+                <form class="admin-products-actions-item" asp-page-handler="DeleteOffer" method="post">
+                  <input name="id" type="hidden" value="@offer.Id"/>
+                  <button class="btn btn-danger">Изтрий</button>
+                </form>
+                @if (!offer.IsActive)
+                {
+                  <a class="btn btn-warning text-white admin-products-actions-item" 
+                     asp-page="@Url.Page("/Admin/Offers/Edit")" 
+                     asp-route-id="@offer.Id">Редактирай</a>
+                                             
+                  <form class="admin-products-actions-item" asp-page-handler="ActivateOffer" method="post">
+                    <input name="id" type="hidden" value="@offer.Id"/>
+                    <button class="btn btn-success">Активирай</button>
+                  </form>
+                }
+              </td>
             </tr>
           }
         }

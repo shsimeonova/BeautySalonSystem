@@ -37,7 +37,8 @@ namespace BeautySalonSystem.Products.Data.Repositories
 
         public void Delete(ProductOffer item)
         {
-            throw new NotImplementedException();
+            item.IsDeleted = true;
+            Update(item);
         }
 
         public IEnumerable<ProductOffer> GetAll()
@@ -64,7 +65,7 @@ namespace BeautySalonSystem.Products.Data.Repositories
 
         public void Update(ProductOffer item)
         {
-            throw new NotImplementedException();
+            _context.ProductOffers.Update(item);
         }
     }
 }

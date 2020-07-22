@@ -57,7 +57,7 @@ namespace BeautySalonSystem.Products
                     };
                 });
 
-            services.AddControllers();
+            services.AddControllers(x => x.AllowEmptyInputInBodyModelBinding = true);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

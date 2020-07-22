@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using AutoMapper;
 using BeautySalonSystem.Controllers;
-using BeautySalonSystem.Products.Models;
 using BeautySalonSystem.Products.Models.ProductOffer;
-using BeautySalonSystem.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using IOffersService = BeautySalonSystem.Products.Services.IOffersService;
@@ -25,6 +21,31 @@ namespace BeautySalonSystem.Products.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
+        public IActionResult ListByProductId([FromQuery(Name = "id")] int id,
+            [FromQuery(Name = "activeOnly")] bool activeOnly = false)
+        {
+            if (id == 0)
+            {
+                var offers = _offersService.GetAll(activeOnly);
+                return Ok(offers);
+            }
+            
+            var offer = _offersService.GetById(id);
+            return Ok(offer);
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetManyByIds([FromQuery] int[] ids, [FromQuery] bool activeOnly)
+        {
+            if (ids.Length == 0)
+            {
+                return BadRequest("Offer ids array cannot be empty");
+            }
+            
+            return Ok(_offersService.GetManyByIds(activeOnly, ids));
+        }
+        
         [HttpPost]
         public CreateProductOfferOutputModel Create(CreateProductOfferInputModel input)
         {
@@ -36,17 +57,48 @@ namespace BeautySalonSystem.Products.Controllers
             var offerId = _offersService.Create(input, currentUserId);
             return new CreateProductOfferOutputModel{ OfferId = offerId };
         }
-
-        [HttpGet]
-        public IEnumerable<GetOfferModel> ListByProductId([FromQuery(Name = "productId")] int productId)
+        
+        [HttpPut("{id}")]
+        public IActionResult Edit([FromBody] CreateProductOfferInputModel input, int id)
         {
-            if (productId == 0)
+            var offer = _offersService.GetById(id);
+
+            if (offer == null)
             {
-                var offers = _offersService.GetAll();
-                return offers;
+                return NotFound();
             }
-            // return await _productOffersService.GetAllByProductId(productId);
-            return null;
+
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _offersService.Delete(id);
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+        
+        [HttpGet("activate/{id}")]
+        [Authorize]
+        public IActionResult Activate(int id)
+        {
+            try
+            {
+                _offersService.Activate(id);
+            }
+            catch (ArgumentNullException)
+            {
+                return NotFound();
+            }
+            return Ok();
         }
     }
 }

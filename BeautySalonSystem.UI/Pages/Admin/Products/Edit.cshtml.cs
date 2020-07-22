@@ -51,6 +51,9 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
 
         public ProductViewModel ViewModel { get; set; }
         
+        [BindProperty]
+        public IEnumerable<SelectListItem> Products { get; set; }
+        
         public IEnumerable<SelectListItem> TypeOptions { get; set; }
 
         public void OnGet(int id)

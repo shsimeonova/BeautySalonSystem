@@ -7,6 +7,7 @@ using BeautySalonSystem.Products;
 using BeautySalonSystem.Products.Data.Repositories;
 using System.Linq.Expressions;
 using BeautySalonSystem.Products.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BeautySalonSystem.Products.Data
 {
@@ -16,10 +17,10 @@ namespace BeautySalonSystem.Products.Data
 
         void Delete(Offer item);
 
-        IEnumerable<OfferDto> GetAll();
-
-        Offer GetByID(int id);
-
+        IEnumerable<OfferDto> GetAll(bool activeOnly);
+        IEnumerable<OfferDto> GetAllByIds(bool activeOnly, int[] ids);
+        Offer GetById(int id);
+        
         void Update(Offer item);
 
         bool SaveChanges();
@@ -41,12 +42,20 @@ namespace BeautySalonSystem.Products.Data
 
         public void Delete(Offer item)
         {
-            throw new NotImplementedException();
+            item.IsDeleted = true;
+            Update(item);
         }
 
-        public IEnumerable<OfferDto> GetAll()
+        public IEnumerable<OfferDto> GetAll(bool activeOnly)
         {
-            return _context.Offers.Select(o => new OfferDto
+            var query=  _context.Offers.Where(o => !o.IsDeleted);
+            
+            if (activeOnly)
+            {
+                query = query.Where(o => o.IsActive);
+            }
+
+            return query.Select(o => new OfferDto
             {
                 Id = o.Id,
                 Name = o.Name,
@@ -54,13 +63,43 @@ namespace BeautySalonSystem.Products.Data
                 TotalPrice = o.TotalPrice,
                 ExpiryDate = o.ExpiryDate,
                 AddedById = o.AddedById,
-                Products = o.ProductOffers.Select(po => po.Product).ToList()
+                Products = o.ProductOffers.Select(po => po.Product).ToList(),
+                IsActive = o.IsActive
             }).ToList();
         }
 
-        public Offer GetByID(int id)
+        public IEnumerable<OfferDto> GetAllByIds(bool activeOnly, int[] ids)
         {
-            return this._context.Offers.Find(id);
+            var query=  _context.Offers
+                .Where(o => !o.IsDeleted)
+                .Where(o => ids.Contains(o.Id));
+            
+            if (activeOnly)
+            {
+                query = query.Where(o => o.IsActive);
+            }
+            
+            return query.Select(o => new OfferDto
+            {
+                Id = o.Id,
+                Name = o.Name,
+                Discount = o.Discount,
+                TotalPrice = o.TotalPrice,
+                ExpiryDate = o.ExpiryDate,
+                AddedById = o.AddedById,
+                Products = o.ProductOffers.Select(po => po.Product).ToList(),
+                IsActive = o.IsActive
+            }).ToList();
+        }
+
+        public Offer GetById(int id)
+        {
+            var offer = _context.Offers
+                .Include(o => o.ProductOffers)
+                .ThenInclude(po => po.Product)
+                .Where(o => o.Id == id).FirstOrDefault();
+
+            return offer;
         }
 
         public bool SaveChanges()
@@ -72,7 +111,7 @@ namespace BeautySalonSystem.Products.Data
 
         public void Update(Offer item)
         {
-            throw new NotImplementedException();
+            _context.Offers.Update(item);
         }
     }
 }

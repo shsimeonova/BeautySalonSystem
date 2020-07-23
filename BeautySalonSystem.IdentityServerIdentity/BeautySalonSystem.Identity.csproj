@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Abp.ZeroCore.IdentityServer4.EntityFrameworkCore" Version="5.10.1" />
+    <PackageReference Include="AspNetCore.RouteAnalyzer" Version="0.5.3" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.0.0" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="4.0.2" />
 
@@ -54,5 +55,9 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BeautySalonSystem\BeautySalonSystem.csproj" />
   </ItemGroup>
 </Project>

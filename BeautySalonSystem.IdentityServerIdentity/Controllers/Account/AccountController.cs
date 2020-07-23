@@ -49,7 +49,6 @@ namespace IdentityServerHost.Quickstart.UI
             _events = events;
         }
 
-
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {

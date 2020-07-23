@@ -5,6 +5,7 @@
 using IdentityServer4.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
+using IdentityServer4;
 
 namespace IdentityServerAspNetIdentity
 {
@@ -26,6 +27,12 @@ namespace IdentityServerAspNetIdentity
                 new ApiScope("scope2"),
                 new ApiScope("ms"),
             };
+        
+        public static IEnumerable<ApiResource> Apis = new List<ApiResource>
+        {
+            // local API
+            new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
+        };
 
         public static IEnumerable<Client> Clients =>
             new Client[]
@@ -47,8 +54,8 @@ namespace IdentityServerAspNetIdentity
                     ClientSecrets = { new Secret("Valt1n3r_01234567".Sha256()) },
                     
                     AllowedGrantTypes = GrantTypes.Code,
-                    AccessTokenLifetime = 120,
-                    IdentityTokenLifetime = 120,
+                    AccessTokenLifetime = 3600,
+                    IdentityTokenLifetime = 3600,
 
                     RedirectUris = { "https://localhost:4009/signin-oidc" },
                     FrontChannelLogoutUri = "https://localhost:4009/signout-oidc",
@@ -58,7 +65,8 @@ namespace IdentityServerAspNetIdentity
                     RefreshTokenExpiration = TokenExpiration.Sliding,
                     AlwaysIncludeUserClaimsInIdToken = true,
                     AllowOfflineAccess = true,
-                    AllowedScopes = { "openid", "profile", "scope2", "role", "ms", "email" }
+                    AllowedScopes = { "openid", "profile", "scope2", "role", "ms", "email", IdentityServerConstants.LocalApi.ScopeName }
+                 
                 }
             };
     }

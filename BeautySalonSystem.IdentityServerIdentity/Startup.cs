@@ -4,10 +4,10 @@
 
 using System;
 using System.Reflection;
-using IdentityServer4;
+using AutoMapper;
 using IdentityServerAspNetIdentity.Data;
 using IdentityServerAspNetIdentity.Models;
-using IdentityServerHost.Quickstart.UI;
+using IdentityServerHost.Quickstart.UI.Models.Output;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -52,7 +52,7 @@ namespace IdentityServerAspNetIdentity
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
                     options.EmitStaticAudienceClaim = true;
-                    options.Authentication.CookieLifetime = TimeSpan.FromMinutes(2);
+                    options.Authentication.CookieLifetime = TimeSpan.FromMinutes(60);
                 })
                 .AddInMemoryIdentityResources(Config.IdentityResources)
                 .AddInMemoryApiScopes(Config.ApiScopes)
@@ -60,9 +60,22 @@ namespace IdentityServerAspNetIdentity
                 .AddAspNetIdentity<ApplicationUser>();
 
             SeedData.EnsureSeedData(connectionString);
-            // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
             services.AddAuthentication();
+
+            IMapper mapper = InitAutoMapper();
+            services.AddSingleton(mapper);
+        }
+
+        public Mapper InitAutoMapper()
+        {
+            var mapperConfig = new AutoMapper.MapperConfiguration(options =>
+                options.CreateMap<ApplicationUser, UserPersonalInfoOutputModel>()
+                    .ForMember(dest => dest.UserName, o => o.MapFrom(src => src.UserName))
+                );
+            
+            var mapper = new Mapper(mapperConfig);
+            return mapper;
         }
 
         public void Configure(IApplicationBuilder app)

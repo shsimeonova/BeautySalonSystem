@@ -4,7 +4,7 @@ namespace BeautySalonSystem.UI.Models
 {
     public class CheckAppointmentRequestTimeInputModel
     {
-        public DateTime appointmentRequestTime { get; set; }
-        public int appointmentRequestDuration { get; set; }
+        public DateTime AppointmentRequestTime { get; set; }
+        public int AppointmentRequestDuration { get; set; }
     }
 }

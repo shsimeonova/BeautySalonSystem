@@ -110,12 +110,12 @@ namespace BeautySalonSystem.Appointments.Controllers
         {
             var appointments = _repository.GetAll();
             var closestAppointment = appointments
-                .OrderBy(a => Math.Abs((a.Date - input.appointmentRequestTime).Ticks))
+                .OrderBy(a => Math.Abs((a.Date - input.AppointmentRequestTime).Ticks))
                 .First();
 
-            double difference = Math.Abs(input.appointmentRequestTime.Subtract(closestAppointment.Date).TotalMinutes);
+            double difference = Math.Abs(input.AppointmentRequestTime.Subtract(closestAppointment.Date).TotalMinutes);
 
-            if (difference < input.appointmentRequestDuration)
+            if (difference < input.AppointmentRequestDuration)
             {
                 return Ok(false);
             }

@@ -80,13 +80,20 @@
                                 <p class="header_copy">Вашите часове</p>
                             </div>
                             <div class="calendar_events">
-                                @foreach (var appointment in Model.Appointments)
+                                @if (Model.Appointments.Count == 0)
                                 {
-                                    <div class="event_item">
-                                        <div class="ei_Dot dot_active"></div>
-                                        <div class="ei_Title">@appointment.offer.Name</div>
-                                        <div class="ei_Copy">@appointment.Date</div>
-                                    </div>
+                                    <h5 class="heading-gray">В момента нямате записани часове. Вижте <a href="@Url.Page("/Offers/Index")">активните оферти</a> и запазете още сега!</h5>
+                                }
+                                else
+                                {
+                                    @foreach (var appointment in Model.Appointments)
+                                    {
+                                        <div class="event_item">
+                                            <div class="ei_Dot dot_active"></div>
+                                            <div class="ei_Title">@appointment.offer.Name</div>
+                                            <div class="ei_Copy">@appointment.Date</div>
+                                        </div>
+                                    }
                                 }
                             </div>
                         </div>

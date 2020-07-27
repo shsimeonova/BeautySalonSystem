@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using BeautySalonSystem.UI.Models;
 using BeautySalonSystem.UI.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BeautySalonSystem.UI.Pages.Admin.Appointments
@@ -41,6 +39,12 @@ namespace BeautySalonSystem.UI.Pages.Admin.Appointments
             }
 
             AppointmentRequests = result;
+        }
+
+        public void OnPostConfirmAppointmentRequest(int id)
+        {
+            _appointmentsService.Confirm(id);
+            OnGet();
         }
     }
 }

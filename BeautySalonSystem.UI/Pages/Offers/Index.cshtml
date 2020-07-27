@@ -19,12 +19,12 @@
   </div>
 </header>
 
-<div class="container row">
+<div class="container">
   @foreach (var offer in Model.AllOffers)
   {
     if (offer.IsActive)
     {
-      <div class="card offer-card col-md-4" style="width: 18rem;">
+      <div class="card offer-card">
         <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Earth_Icon.png" alt="Image">
         <div class="card-body">
           <h5 class="card-title">@offer.Name</h5>

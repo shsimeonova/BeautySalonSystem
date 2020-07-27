@@ -47,12 +47,15 @@ namespace BeautySalonSystem.UI.Pages.Users
                 .FirstOrDefault(cl => cl.Type.Equals("sub"))
                 ?.Value;
             
-            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
             Appointments = _appointmentsService.GetConfirmedByCustomerId(currentUserId).ToList();
-            HashSet<int> offerIds = Appointments.Select(a => a.offerId).ToHashSet();
+
+            if (Appointments.Count != 0)
+            {
+                HashSet<int> offerIds = Appointments.Select(a => a.offerId).ToHashSet();
             
-            Dictionary<int, OfferViewModel> offers = _offersService.GetManyByIds(offerIds.ToArray(), true);
-            Appointments.ForEach(a => a.offer = offers[a.offerId]);
+                Dictionary<int, OfferViewModel> offers = _offersService.GetManyByIds(offerIds.ToArray(), true);
+                Appointments.ForEach(a => a.offer = offers[a.offerId]);
+            }
             
             Console.WriteLine();
         }

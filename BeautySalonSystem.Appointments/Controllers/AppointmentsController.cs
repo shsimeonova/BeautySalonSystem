@@ -93,7 +93,7 @@ namespace BeautySalonSystem.Appointments.Controllers
             return Ok(appointment.Id);
         }
 
-        [HttpPost("{id}")]
+        [HttpPost("{id}/confirm")]
         public IActionResult ConfirmAppointment(int id)
         {
             var appointment = _repository.GetByID(id);

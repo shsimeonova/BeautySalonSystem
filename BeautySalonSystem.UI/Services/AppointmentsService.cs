@@ -21,6 +21,8 @@ namespace BeautySalonSystem.UI.Services
         IEnumerable<AppointmentViewModel> GetAllNonConfirmed();
         
         bool CheckIsAppointmentRequestTimeFree(DateTime appointmentRequestDate, int appointmentRequestDuration);
+
+        void Confirm(int appointmentRequstId);
     }
     
     public class AppointmentsService : MicroserviceHttpService, IAppointmentsService
@@ -79,6 +81,14 @@ namespace BeautySalonSystem.UI.Services
                 HttpMethod.Post);
             
             return bool.Parse(response.ReturnData);
+        }
+
+        public void Confirm(int appointmentRequstId)
+        {
+            MicroserviceResponse response = Execute(
+                $"{_client.BaseAddress}/{appointmentRequstId}/confirm", 
+                null, 
+                HttpMethod.Post);
         }
     }
 }

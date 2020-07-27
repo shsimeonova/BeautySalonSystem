@@ -39,13 +39,13 @@
   <tbody>
     @if (Model.AppointmentRequests != null)
         {
-          foreach (var ar in Model.AppointmentRequests)
+          foreach (var appointmentRequest in Model.AppointmentRequests)
           {
              <tr>
-               <th scope="row">@ar.Id</th>
+               <th scope="row">@appointmentRequest.Id</th>
                <td>"to be added"</td>
-               <td>@ar.UserInfo.UserName</td>
-               <td>@ar.UserInfo.FullName</td>
+               <td>@appointmentRequest.UserInfo.UserName</td>
+               <td>@appointmentRequest.UserInfo.FullName</td>
                <td>@if (true)
                    {
                      <span>Активна</span>
@@ -54,24 +54,13 @@
                    {
                      <span>Неактивна</span>
                    }
-               <td>@ar.offer.Name</td>
-@*                <td class="admin-products-actions d-flex"> *@
-@*                  <form class="admin-products-actions-item" asp-page-handler="DeleteOffer" method="post"> *@
-@*                    <input name="id" type="hidden" value="@offer.Id"/> *@
-@*                    <button class="btn btn-danger">Изтрий</button> *@
-@*                  </form> *@
-@*                  @if (!offer.IsActive) *@
-@*                  { *@
-@*                    <a class="btn btn-warning text-white admin-products-actions-item" *@
-@*                       asp-page="@Url.Page("/Admin/Offers/Edit")" *@
-@*                       asp-route-id="@offer.Id">Редактирай</a> *@
-@* *@
-@*                    <form class="admin-products-actions-item" asp-page-handler="ActivateOffer" method="post"> *@
-@*                      <input name="id" type="hidden" value="@offer.Id"/> *@
-@*                      <button class="btn btn-success">Активирай</button> *@
-@*                    </form> *@
-@*                  } *@
-@*                </td> *@
+               <td>@appointmentRequest.offer.Name</td>
+               <td class="admin-products-actions d-flex">
+                 <form class="admin-products-actions-item" asp-page-handler="ConfirmAppointmentRequest" method="post">
+                   <input name="id" type="hidden" value="@appointmentRequest.Id"/>
+                   <button class="btn btn-success">Одобри</button>
+                 </form>
+               </td>
              </tr>
           }
         }

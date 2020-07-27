@@ -69,17 +69,16 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
                         Value = product.Id.ToString(),
                         Text = product.Name
                     })
-                .ToList();;
+                .ToList();
         }
 
         public async Task<IActionResult> OnPost()
         {
-            var access_token = await HttpContext.GetTokenAsync("access_token");
             OfferCreateInput.Name = Name;
             OfferCreateInput.Discount = Discount;
             OfferCreateInput.ExpiryDate = ExpiryDate;
             OfferCreateInput.TotalPrice = decimal.Round(TotalPrice, 2);
-            offersService.Create(OfferCreateInput, access_token);
+            offersService.Create(OfferCreateInput);
             
             return RedirectToPage("./Index");
         }

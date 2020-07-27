@@ -1,93 +1,91 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using BeautySalonSystem.UI.Models;
-using BeautySalonSystem.UI.Util;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using HttpMethod = Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpMethod;
 
 namespace BeautySalonSystem.UI.Services
 {
     public interface IProductsService
     {
-        IEnumerable<ProductViewModel> GetAll(string accessToken);
-        ProductViewModel GetById(int id, string accessToken);
-        void Create(ProductCreateInputModel input, string accessToken);
-        void Edit(ProductEditViewModel input, string accessToken);
-        void Delete(int id, string accessToken);
-        IEnumerable<string> GetProductTypes(string accessToken);
+        IEnumerable<ProductViewModel> GetAll();
+        ProductViewModel GetById(int id);
+        void Create(ProductCreateInputModel input);
+        void Edit(ProductEditViewModel input);
+        void Delete(int id);
+        IEnumerable<string> GetProductTypes();
     }
     
-    public class ProductsService : IProductsService
+    public class ProductsService : MicroserviceHttpService, IProductsService
     {
-        private readonly HttpClient _client;
-        private string _productsBaseUrl;
-        
-        public ProductsService(IConfiguration configuration)
-        {
-            Configuration = configuration;
-            _productsBaseUrl = Configuration.GetSection("Services:Products:Url").Value + "products";
-            _client = new HttpClient();
-        }
+        public ProductsService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor) : base(httpClient, httpContextAccessor)
+        {}
         
         public IConfiguration Configuration { get; }
         
-        public IEnumerable<ProductViewModel> GetAll(string accessToken)
+        public IEnumerable<ProductViewModel> GetAll()
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var response = _client.GetAsync(this._productsBaseUrl).Result;
-            string responseBody = response.Content.ReadAsStringAsync().Result;
-            var allProducts = JsonConvert.DeserializeObject<IEnumerable<ProductViewModel>>(responseBody);
+            MicroserviceResponse response = Execute(
+                _client.BaseAddress.ToString(),
+                null,
+                HttpMethod.Get);
+            
+            var allProducts = JsonConvert.DeserializeObject<IEnumerable<ProductViewModel>>(response.ReturnData);
 
             return allProducts;
         }
         
-        public ProductViewModel GetById(int id, string accessToken)
+        public ProductViewModel GetById(int id)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            string requestUrl = _productsBaseUrl + $"/{id}";
-            var getProductResponse = _client.GetAsync(requestUrl).Result;
-            ProductViewModel result = JsonConvert.DeserializeObject<ProductViewModel>(getProductResponse.Content.ReadAsStringAsync().Result);
+            MicroserviceResponse response = Execute(
+                $"{_client.BaseAddress}/{id}",
+                null,
+                HttpMethod.Get);
+            
+            ProductViewModel result = JsonConvert.DeserializeObject<ProductViewModel>(response.ReturnData);
 
             return result;
         }
         
-        public void Create(ProductCreateInputModel input, string accessToken)
+        public void Create(ProductCreateInputModel input)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var content = JsonConvert.SerializeObject(new
-            {
-                Name = input.Name,
-                Price = input.Price,
-                Type = input.Type
-            });
-            var response = _client.PostAsync(_productsBaseUrl, new StringContent(content,  Encoding.UTF8, "application/json")).Result;
-        }
+            MicroserviceResponse response = Execute(
+                _client.BaseAddress.ToString(),
+                input,
+                HttpMethod.Post);
 
-        public void Edit(ProductEditViewModel input, string accessToken)
-        {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            StringContent content = new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
-            var requestUrl = _productsBaseUrl + $"/{input.Id}";
-            var response = _client.PutAsync(requestUrl, content).Result;
             Console.WriteLine();
         }
 
-        public void Delete(int id, string accessToken)
+        public void Edit(ProductEditViewModel input)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var response = _client.DeleteAsync(this._productsBaseUrl + $"?id={id}").Result;
+            MicroserviceResponse response = Execute(
+               $"{_client.BaseAddress}/{input.Id}",
+                input,
+                HttpMethod.Put);
+            
+            Console.WriteLine();
         }
 
-        public IEnumerable<string> GetProductTypes(string accessToken)
+        public void Delete(int id)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var response = _client.GetAsync(_productsBaseUrl + "/types").Result;
-            var responseList = JsonConvert.DeserializeObject<IEnumerable<string>>(response.Content.ReadAsStringAsync().Result);
+            MicroserviceResponse response = Execute(
+                $"{_client.BaseAddress}?id={id}",
+                null,
+                HttpMethod.Put);
+        }
 
+        public IEnumerable<string> GetProductTypes()
+        {
+            MicroserviceResponse response = Execute(
+                $"{_client.BaseAddress}/types",
+                null,
+                HttpMethod.Get);
+            
+            var responseList = JsonConvert.DeserializeObject<IEnumerable<string>>(response.ReturnData);
             return responseList;
         }
     }

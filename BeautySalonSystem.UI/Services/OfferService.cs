@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using BeautySalonSystem.UI.Models;
-using BeautySalonSystem.UI.Util;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using HttpMethod = Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpMethod;
 
 namespace BeautySalonSystem.UI.Services
 {
@@ -13,33 +13,29 @@ namespace BeautySalonSystem.UI.Services
     {
         IEnumerable<OfferViewModel> GetAll(bool activeOnly);
         IEnumerable<OfferViewModel> GetAllActive();
-        OfferViewModel GetById(int id, string accessToken);
+        OfferViewModel GetById(int id);
         Dictionary<int, OfferViewModel> GetManyByIds(int[] ids, bool activeOnly);
-        void Create(OfferCreateInputModel input, string accessToken);
-        void Delete(int id, string accessToken);
-        void Activate(int id, string accessToken);
-        
+        void Create(OfferCreateInputModel input);
+        void Delete(int id);
+        void Activate(int id);
+        int GetDuration(int id);
     }
     
-    public class OffersService : IOffersService
+    public class OffersService : MicroserviceHttpService, IOffersService
     {
-        private readonly HttpClient _client;
-        private string _offersBaseUrl;
-        
-        public OffersService(IConfiguration configuration)
-        {
-            Configuration = configuration;
-            _offersBaseUrl = Configuration.GetSection("Services:Products:Url").Value + "offers";
-            _client = new HttpClient();
-        }
+        public OffersService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor) : base(httpClient, httpContextAccessor)
+        {}
         
         public IConfiguration Configuration { get; }
 
         public IEnumerable<OfferViewModel> GetAll(bool activeOnly)
         {
-            var response = _client.GetAsync($"{_offersBaseUrl}?activeOnly={activeOnly}").Result;
-            string responseBody = response.Content.ReadAsStringAsync().Result;
-            var allOffers = JsonConvert.DeserializeObject<IEnumerable<OfferViewModel>>(responseBody);
+            MicroserviceResponse response = Execute(
+                $"{_client.BaseAddress}?activeOnly={activeOnly}",
+                null,
+                HttpMethod.Get);
+            
+            var allOffers = JsonConvert.DeserializeObject<IEnumerable<OfferViewModel>>(response.ReturnData);
 
             return allOffers;
         }
@@ -51,27 +47,33 @@ namespace BeautySalonSystem.UI.Services
             return offers;
         }
 
-        public OfferViewModel GetById(int id, string accessToken)
+        public OfferViewModel GetById(int id)
         {
-            var requestUrl = $"{_offersBaseUrl}?id={id}";
-            var response = _client.GetAsync(requestUrl).Result;
-            string responseBody = response.Content.ReadAsStringAsync().Result;
-            var offer = JsonConvert.DeserializeObject<OfferViewModel>(responseBody);
+            MicroserviceResponse response = Execute(
+                $"{_client.BaseAddress}?id={id}",
+                null,
+                HttpMethod.Get);
+            
+            var offer = JsonConvert.DeserializeObject<OfferViewModel>(response.ReturnData);
 
             return offer;
         }
         
         public Dictionary<int, OfferViewModel> GetManyByIds(int[] ids, bool activeOnly)
         {
-            var requestUrl = $"{_offersBaseUrl}/all/?activeOnly={activeOnly}";
+            string requestUrl = $"{_client.BaseAddress}/all/?activeOnly={activeOnly}";
+            
             foreach (int id in ids)
             {
                 requestUrl += $"&ids={id}";
             }
             
-            var response = _client.GetAsync(requestUrl).Result;
-            string responseBody = response.Content.ReadAsStringAsync().Result;
-            var offers = JsonConvert.DeserializeObject<IEnumerable<OfferViewModel>>(responseBody);
+            MicroserviceResponse response = Execute(
+                requestUrl,
+                null,
+                HttpMethod.Get);
+            
+            var offers = JsonConvert.DeserializeObject<IEnumerable<OfferViewModel>>(response.ReturnData);
             
             Dictionary<int, OfferViewModel> result = new Dictionary<int, OfferViewModel>();
             foreach (var offerViewModel in offers)
@@ -82,40 +84,50 @@ namespace BeautySalonSystem.UI.Services
             return result;
         }
 
-        public void Create(OfferCreateInputModel input, string accessToken)
+        public void Create(OfferCreateInputModel input)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var content = new JsonContent(
-            new {
-                Name = input.Name,
-                TotalPrice = input.TotalPrice,
-                Products = input.ProductIds,
-                Discount = input.Discount,
-                ExpiryDate = input.ExpiryDate
-            });
+            MicroserviceResponse response = Execute(
+                _client.BaseAddress.ToString(),
+                new {
+                    input.Name,
+                    input.TotalPrice,
+                    Products = input.ProductIds,
+                    input.Discount,
+                    input.ExpiryDate
+                },
+                HttpMethod.Post);
             
-            var response = _client.PostAsync(_offersBaseUrl, content).Result;
-            string responseBody = response.Content.ReadAsStringAsync().Result;
-
             Console.WriteLine();
         }
 
-        public void Delete(int id, string accessToken)
+        public void Delete(int id)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var requestUrl = $"{_offersBaseUrl}/{id}";
-            var response = _client.DeleteAsync(requestUrl).Result;
-
+            MicroserviceResponse response = Execute(
+                $"{_client.BaseAddress}/{id}",
+                null,
+                HttpMethod.Delete);
+            
             Console.WriteLine();
         }
 
-        public void Activate(int id, string accessToken)
+        public void Activate(int id)
         {
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            string requestUrl = $"{_offersBaseUrl}/activate/{id}";
-            var response = _client.GetAsync(requestUrl).Result;
-            string responseBody = response.Content.ReadAsStringAsync().Result;
+            MicroserviceResponse response = Execute(
+                $"{_client.BaseAddress}/activate/{id}",
+                null,
+                HttpMethod.Get);
+            
             Console.WriteLine();
+        }
+
+        public int GetDuration(int id)
+        {
+            MicroserviceResponse response = Execute(
+                $"{_client.BaseAddress}/{id}/duration",
+                null,
+                HttpMethod.Get);
+            
+            return int.Parse(response.ReturnData);
         }
     }
 }

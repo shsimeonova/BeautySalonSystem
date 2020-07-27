@@ -43,8 +43,7 @@ namespace BeautySalonSystem.UI.Pages.Appointments
         public void OnGet(int id)
         {
             OfferId = id;
-            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
-            Duration = _offersService.GetDuration(id, accessToken);
+            Duration = _offersService.GetDuration(id);
             Console.WriteLine();
         }
         
@@ -69,7 +68,6 @@ namespace BeautySalonSystem.UI.Pages.Appointments
                 };
                 return Page();
             }
-            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
             var currentUserId = HttpContext.User.Claims
                 .FirstOrDefault(cl => cl.Type.Equals("sub"))
                 ?.Value;
@@ -79,8 +77,7 @@ namespace BeautySalonSystem.UI.Pages.Appointments
                 CustomerId = currentUserId,
                 Date = AppointmentRequestDate,
                 OfferId = OfferId
-            }, 
-            accessToken);
+            });
             
             return RedirectToPage("/Offers/Index");
         }
@@ -93,9 +90,7 @@ namespace BeautySalonSystem.UI.Pages.Appointments
         
         public bool IsAppointmentTimeFree()
         {
-            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
-            bool result =
-                _appointmentsService.CheckIsAppointmentRequestTimeFree(accessToken, AppointmentRequestDate, Duration);
+            bool result = _appointmentsService.CheckIsAppointmentRequestTimeFree(AppointmentRequestDate, Duration);
             return result;
         }
     }

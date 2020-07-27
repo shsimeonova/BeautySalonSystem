@@ -5,6 +5,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using BeautySalonSystem.UI.Models;
 using BeautySalonSystem.UI.Services;
 using BeautySalonSystem.UI.Util;
 using Microsoft.AspNetCore.Authentication;
@@ -78,13 +80,39 @@ namespace BeautySalonSystem.UI
             {
                 options.AddPolicy("Admin", policy => policy.RequireClaim("role", "Admin"));
             });
-
-            services.AddTransient<IProductsService, ProductsService>();
-            services.AddTransient<IAppointmentsService, AppointmentsService>();
-            services.AddTransient<IOffersService, OffersService>();
+            
             services.AddSingleton<ISessionHelper, SessionHelper>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddHttpClient<IAppointmentsService, AppointmentsService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration.GetSection("Services:Appointments:Url").Value + "appointments");
+            });
+            services.AddHttpClient<IOffersService, OffersService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration.GetSection("Services:Products:Url").Value + "offers");
+            });
+            services.AddHttpClient<IProductsService, ProductsService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration.GetSection("Services:Products:Url").Value + "products");
+            });
+            services.AddHttpClient<IUserService, UserService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration.GetSection("Services:Identity:Url").Value);
+            });
+            
+            IMapper mapper = InitAutoMapper();
+            services.AddSingleton(mapper);
 
             services.AddRazorPages();
+        }
+        
+        public Mapper InitAutoMapper()
+        {
+            var mapperConfig = new MapperConfiguration(options => options.CreateMap<AppointmentViewModel, AppointmentAdminViewModel>());
+            
+            var mapper = new Mapper(mapperConfig);
+            return mapper;
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

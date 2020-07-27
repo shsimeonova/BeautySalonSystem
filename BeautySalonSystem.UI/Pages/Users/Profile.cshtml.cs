@@ -48,7 +48,7 @@ namespace BeautySalonSystem.UI.Pages.Users
                 ?.Value;
             
             string accessToken = HttpContext.GetTokenAsync("access_token").Result;
-            Appointments = _appointmentsService.GetConfirmedByCustomerId(currentUserId, accessToken).ToList();
+            Appointments = _appointmentsService.GetConfirmedByCustomerId(currentUserId).ToList();
             HashSet<int> offerIds = Appointments.Select(a => a.offerId).ToHashSet();
             
             Dictionary<int, OfferViewModel> offers = _offersService.GetManyByIds(offerIds.ToArray(), true);

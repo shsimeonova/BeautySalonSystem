@@ -50,8 +50,7 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
         
         public void OnGet(int id)
         {
-            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
-            OfferViewModel = _offersService.GetById(id, accessToken);
+            OfferViewModel = _offersService.GetById(id);
             Products = OfferViewModel.Products.Select(product =>
                 new SelectListItem
                 {

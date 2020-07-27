@@ -43,12 +43,14 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
         [BindProperty, Required]
         public string Type { get; set; }
         
+        [BindProperty, Required]
+        public int Duration { get; set; }
+        
         public IEnumerable<SelectListItem> TypeOptions { get; set; }
         
         public void OnGet()
         {
-            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
-            var types = _productsService.GetProductTypes(accessToken);
+            var types = _productsService.GetProductTypes();
             TypeOptions = types.Select(type =>
                 new SelectListItem
                 {
@@ -59,13 +61,13 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
         
         public IActionResult OnPost()
         {
-            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
             _productsService.Create(new ProductCreateInputModel()
             {
-                Name = this.Name, 
-                Type = this.Type, 
-                Price = this.Price
-            }, accessToken);
+                Name = Name, 
+                Type = Type, 
+                Price = Price,
+                Duration = Duration
+            });
 
             return RedirectToPage("./Index");
         }

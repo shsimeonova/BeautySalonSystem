@@ -20,9 +20,7 @@ namespace BeautySalonSystem.Products.Data
         IEnumerable<OfferDto> GetAll(bool activeOnly);
         IEnumerable<OfferDto> GetAllByIds(bool activeOnly, int[] ids);
         Offer GetById(int id);
-        
         void Update(Offer item);
-
         bool SaveChanges();
     }
     

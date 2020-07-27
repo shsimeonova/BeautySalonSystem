@@ -58,10 +58,9 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
 
         public void OnGet(int id)
         {
-            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
-            ViewModel = _productsService.GetById(id, accessToken);
+            ViewModel = _productsService.GetById(id);
 
-            var getProductTypesResponse = _productsService.GetProductTypes(accessToken);
+            var getProductTypesResponse = _productsService.GetProductTypes();
             TypeOptions = getProductTypesResponse.Select(type =>
                 new SelectListItem
                 {
@@ -72,14 +71,13 @@ namespace BeautySalonSystem.UI.Pages.Admin.Products
 
         public IActionResult OnPost()
         {
-            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
             _productsService.Edit(new ProductEditViewModel
             {
                 Id = Id,
                 Name = Name,
                 Price =  Price,
                 Type = Type
-            }, accessToken);
+            });
             return RedirectToPage("./Index");
         }
     }

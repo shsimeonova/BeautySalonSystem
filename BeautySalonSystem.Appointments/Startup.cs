@@ -1,5 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using AutoMapper;
 using BeautySalonSystem.Appointments.Data;
 using BeautySalonSystem.Appointments.Data.Repositories;
 using Microsoft.EntityFrameworkCore;

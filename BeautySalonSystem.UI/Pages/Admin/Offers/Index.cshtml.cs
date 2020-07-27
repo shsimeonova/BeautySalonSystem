@@ -27,13 +27,12 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
 
         public void OnPostDeleteOffer(int id)
         {
-            _offersService.Delete(id, HttpContext.GetTokenAsync("access_token").Result);
+            _offersService.Delete(id);
         }
         
         public void OnPostActivateOffer(int id)
         {
-            string accessToken = HttpContext.GetTokenAsync("access_token").Result;
-            _offersService.Activate(id, accessToken);
+            _offersService.Activate(id);
             OnGet();
         }
     }

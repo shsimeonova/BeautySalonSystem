@@ -50,8 +50,7 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
         
         public async Task<IActionResult> OnGet()
         {
-            string accessToken = await HttpContext.GetTokenAsync("access_token");
-            IEnumerable<ProductViewModel> allProducts = _productsService.GetAll(accessToken);
+            IEnumerable<ProductViewModel> allProducts = _productsService.GetAll();
             _sessionHelper.AddRenewItem("AllProducts", allProducts);;
             Products = allProducts.Select(product =>
                 new SelectListItem

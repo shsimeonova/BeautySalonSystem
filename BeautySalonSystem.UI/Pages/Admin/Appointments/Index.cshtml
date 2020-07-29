@@ -24,8 +24,14 @@
   <a class="btn btn-success" href="@Url.Page("/Admin/Offers/Create")"><i class="fas fa-plus"></i> Добави</a>
 </div>
 
-<table class="table">
-  <thead>
+@if (Model.AppointmentRequests == null)
+{
+  <h5 class="text-center">В момента няма неодобрени заявки за часове.</h5>
+}
+else
+{
+  <table class="table">
+    <thead>
     <tr>
       <th scope="col">ID</th>
       <th scope="col">Подадено на</th>
@@ -35,27 +41,25 @@
       <th scope="col">Оферта</th>
       <th scope="col">Действия</th>
     </tr>
-  </thead>
-  <tbody>
-    @if (Model.AppointmentRequests != null)
-        {
-          foreach (var appointmentRequest in Model.AppointmentRequests)
-          {
-             <tr>
-               <th scope="row">@appointmentRequest.Id</th>
-               <td>@appointmentRequest.DateRequested</td>
-               <td>@appointmentRequest.UserInfo.UserName</td>
-               <td>@appointmentRequest.UserInfo.FullName</td>
-               <td>@appointmentRequest.UserInfo.Email</td>
-               <td>@appointmentRequest.offer.Name</td>
-               <td class="admin-products-actions d-flex">
-                 <form class="admin-products-actions-item" asp-page-handler="ConfirmAppointmentRequest" method="post">
-                   <input name="id" type="hidden" value="@appointmentRequest.Id"/>
-                   <button class="btn btn-success">Одобри</button>
-                 </form>
-               </td>
-             </tr>
-          }
-        }
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+    @foreach (var appointmentRequest in Model.AppointmentRequests)
+    {
+      <tr>
+        <th scope="row">@appointmentRequest.Id</th>
+        <td>@appointmentRequest.DateRequested</td>
+        <td>@appointmentRequest.UserInfo.UserName</td>
+        <td>@appointmentRequest.UserInfo.FullName</td>
+        <td>@appointmentRequest.UserInfo.Email</td>
+        <td>@appointmentRequest.offer.Name</td>
+        <td class="admin-products-actions d-flex">
+          <form class="admin-products-actions-item" asp-page-handler="ConfirmAppointmentRequest" method="post">
+            <input name="id" type="hidden" value="@appointmentRequest.Id"/>
+            <button class="btn btn-success">Одобри</button>
+          </form>
+        </td>
+      </tr>
+    }
+    </tbody>
+  </table>
+}

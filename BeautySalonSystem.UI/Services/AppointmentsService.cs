@@ -20,7 +20,7 @@ namespace BeautySalonSystem.UI.Services
         
         IEnumerable<AppointmentViewModel> GetAllNonConfirmed();
         
-        bool CheckIsAppointmentRequestTimeFree(DateTime appointmentRequestDate, int appointmentRequestDuration);
+        AppointmentFreeValidationResponseModel CheckIsAppointmentRequestTimeFree(DateTime appointmentRequestDate, int appointmentRequestDuration);
 
         void Confirm(int appointmentRequstId);
     }
@@ -69,7 +69,7 @@ namespace BeautySalonSystem.UI.Services
             return result;
         }
 
-        public bool CheckIsAppointmentRequestTimeFree(DateTime appointmentRequestDate, int appointmentRequestDuration)
+        public AppointmentFreeValidationResponseModel CheckIsAppointmentRequestTimeFree(DateTime appointmentRequestDate, int appointmentRequestDuration)
         {
             MicroserviceResponse response = Execute(
                 $"{_client.BaseAddress}/check-time", 
@@ -80,7 +80,8 @@ namespace BeautySalonSystem.UI.Services
                 }, 
                 HttpMethod.Post);
             
-            return bool.Parse(response.ReturnData);
+            var result = JsonConvert.DeserializeObject<AppointmentFreeValidationResponseModel>(response.ReturnData);
+            return result;
         }
 
         public void Confirm(int appointmentRequstId)

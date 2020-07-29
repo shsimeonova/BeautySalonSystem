@@ -50,6 +50,7 @@
             <input type="text" id="preview-total-price" class="form-control" asp-for="TotalPrice" data-val="true"/>
         </div>
         <input type="hidden" id="total-price-default" value="@Model.OfferCreateInput.TotalPrice">
+        <input type="hidden" asp-for="ImageUrl">
         <div class="form-group">
             <label asp-for="@Model.OfferCreateInput.ExpiryDate" class="col-form-label col-md-3">Активна до:</label>
             <input type="date" class="form-control datetime-local" asp-for="@Model.ExpiryDate">

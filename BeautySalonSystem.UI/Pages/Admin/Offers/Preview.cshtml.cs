@@ -56,12 +56,16 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
         [Range(0, 90)]
         public int Discount { get; set; }
         
+        [BindProperty]
+        public string ImageUrl { get; set; }
+        
         public void OnGet()
         {
             OfferCreateInput = (OfferCreateInputModel) _sessionHelper.GetItem("CreateOfferInput");
             Name = OfferCreateInput.Name;
             TotalPrice = OfferCreateInput.TotalPrice;
             ExpiryDate = OfferCreateInput.ExpiryDate;
+            ImageUrl = OfferCreateInput.ImageUrl;
             Products = ((IEnumerable<ProductViewModel>) _sessionHelper.GetItem("AllProducts"))
                 .Select(product =>
                     new SelectListItem
@@ -78,6 +82,7 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
             OfferCreateInput.Discount = Discount;
             OfferCreateInput.ExpiryDate = ExpiryDate;
             OfferCreateInput.TotalPrice = decimal.Round(TotalPrice, 2);
+            OfferCreateInput.ImageUrl = ImageUrl;
             offersService.Create(OfferCreateInput);
             
             return RedirectToPage("./Index");

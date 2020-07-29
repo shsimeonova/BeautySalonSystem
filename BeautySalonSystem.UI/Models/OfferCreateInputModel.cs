@@ -9,6 +9,7 @@ namespace BeautySalonSystem.UI.Models
         public int[] ProductIds { get; set; }
         public int Discount { get; set; }
         public decimal TotalPrice { get; set; }
+        public string ImageUrl { get; set; }
         public string ExpiryDate { get; set; }
     }
 }

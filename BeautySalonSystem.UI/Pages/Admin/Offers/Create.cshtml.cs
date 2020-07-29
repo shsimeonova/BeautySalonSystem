@@ -43,6 +43,15 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
         public string ExpiryDate { get; set; }
         
         [BindProperty]
+        [PageRemote(
+            ErrorMessage ="Невалиден линк за снимка.",
+            AdditionalFields = "__RequestVerificationToken", 
+            HttpMethod ="post",  
+            PageHandler ="ValidateImageUrl"
+        )]
+        public string ImageUrl { get; set; }
+        
+        [BindProperty]
         public IEnumerable<int> SelectedProductsIds { get; set; }
         
         [BindProperty]
@@ -70,10 +79,11 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
                 .Sum(p => p.Price);
             var createOfferInput = new OfferCreateInputModel
             {
-                Name = this.Name,
-                ProductIds = this.SelectedProductsIds.ToArray(),
+                Name = Name,
+                ProductIds = SelectedProductsIds.ToArray(),
                 TotalPrice = totalPrice,
-                ExpiryDate = this.ExpiryDate
+                ImageUrl = ImageUrl,
+                ExpiryDate = ExpiryDate
             };
             
             _sessionHelper.AddRenewItem("CreateOfferInput", createOfferInput);
@@ -85,6 +95,13 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
             var expiryDateInput = DateTime.ParseExact(ExpiryDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
             var isBeforeNow = expiryDateInput > DateTime.Now;
             return new JsonResult(isBeforeNow);
+        }
+        
+        public JsonResult OnPostValidateImageUrl()
+        {
+            Uri uriResult;
+            bool result = Uri.TryCreate(ImageUrl, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            return new JsonResult(result);
         }
     }
 }

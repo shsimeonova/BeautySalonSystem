@@ -60,6 +60,7 @@ namespace BeautySalonSystem.Products.Data
                 Discount = o.Discount,
                 TotalPrice = o.TotalPrice,
                 ExpiryDate = o.ExpiryDate,
+                ImageUrl = o.Image,
                 AddedById = o.AddedById,
                 Products = o.ProductOffers.Select(po => po.Product).ToList(),
                 IsActive = o.IsActive

@@ -117,7 +117,12 @@ namespace BeautySalonSystem.Appointments.Controllers
 
             if (difference < input.AppointmentRequestDuration)
             {
-                return Ok(false);
+                return Ok(new {
+                    IsRequestTimeFree = false,
+                    ClosestAppointmentId = closestAppointment.Id,
+                    ClosestAppointmentDate = closestAppointment.Date,
+                    ClosestAppointmentOfferId = closestAppointment.OfferId
+                });
             }
             
             return Ok(true);

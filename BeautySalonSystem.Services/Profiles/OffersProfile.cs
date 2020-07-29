@@ -12,6 +12,7 @@ namespace BeautySalonSystem.Products.Profiles
     {
         public OffersProfile()
         {
+            CreateMap<Offer, OfferDto>();
             CreateMap<Offer, GetOfferModel>();
             CreateMap<OfferDto, GetOfferModel>();
         }

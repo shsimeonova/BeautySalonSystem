@@ -12,6 +12,7 @@ namespace BeautySalonSystem.Products.Models
         public decimal Discount { get; set; }
         public string AddedById { get; set; }
         public DateTime ExpiryDate { get; set; }
+        public string ImageUrl { get; set; }
         public IEnumerable<Product> Products { get; set; }
         public bool IsActive { get; set; }
     }

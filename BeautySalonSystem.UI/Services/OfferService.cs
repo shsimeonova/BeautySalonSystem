@@ -93,7 +93,8 @@ namespace BeautySalonSystem.UI.Services
                     input.TotalPrice,
                     Products = input.ProductIds,
                     input.Discount,
-                    input.ExpiryDate
+                    input.ExpiryDate,
+                    input.ImageUrl
                 },
                 HttpMethod.Post);
             

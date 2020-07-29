@@ -16,5 +16,7 @@ namespace BeautySalonSystem.Products.Models.ProductOffer
         public int Discount { get; set; }
 
         public string ExpiryDate { get; set; }
+        
+        public string ImageUrl { get; set; }
     }
 }

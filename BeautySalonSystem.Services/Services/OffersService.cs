@@ -120,6 +120,7 @@ namespace BeautySalonSystem.Products.Services
                 TotalPrice = decimal.Round(input.TotalPrice),
                 Discount = input.Discount,
                 ExpiryDate = DateTime.ParseExact(input.ExpiryDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
+                Image = input.ImageUrl,
                 AddedById = currentUserId
             };
             

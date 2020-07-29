@@ -4,7 +4,6 @@ using System.Linq;
 using BeautySalonSystem.UI.Models;
 using BeautySalonSystem.UI.Services;
 using BeautySalonSystem.UI.Util;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -24,12 +23,6 @@ namespace BeautySalonSystem.UI.Pages.Appointments
         }
         
         [BindProperty, Required]
-        // [PageRemote(
-        //     ErrorMessage = "Датата не може да бъде в миналото",
-        //     AdditionalFields = "__RequestVerificationToken",
-        //     HttpMethod = "post",  
-        //     PageHandler = "IsDateBeforeNow"
-        // )]
         public DateTime AppointmentRequestDate { get; set; }
         
         [BindProperty]
@@ -44,7 +37,6 @@ namespace BeautySalonSystem.UI.Pages.Appointments
         {
             OfferId = id;
             Duration = _offersService.GetDuration(id);
-            Console.WriteLine();
         }
         
         public IActionResult OnPost()
@@ -58,8 +50,9 @@ namespace BeautySalonSystem.UI.Pages.Appointments
                 };
                 return Page();
             }
-            
-            if (!IsAppointmentTimeFree())
+
+            AppointmentFreeValidationResponseModel responseModel = ValidateIsAppointmentTimeFree();
+            if (!responseModel.IsRequestTimeFree)
             {
                 Message = new PageMessage
                 {
@@ -88,9 +81,9 @@ namespace BeautySalonSystem.UI.Pages.Appointments
             return isBeforeNow;
         }
         
-        public bool IsAppointmentTimeFree()
+        public AppointmentFreeValidationResponseModel ValidateIsAppointmentTimeFree()
         {
-            bool result = _appointmentsService.CheckIsAppointmentRequestTimeFree(AppointmentRequestDate, Duration);
+            AppointmentFreeValidationResponseModel result = _appointmentsService.CheckIsAppointmentRequestTimeFree(AppointmentRequestDate, Duration);
             return result;
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -9,6 +10,8 @@ using AutoMapper;
 using BeautySalonSystem.UI.Models;
 using BeautySalonSystem.UI.Services;
 using BeautySalonSystem.UI.Util;
+using MassTransit;
+using MassTransit.MultiBus;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -100,6 +103,11 @@ namespace BeautySalonSystem.UI
             {
                 client.BaseAddress = new Uri(Configuration.GetSection("Services:Identity:Url").Value);
             });
+
+            services.AddMassTransit(options =>
+            {
+                options.AddBus(context => Bus.Factory.CreateUsingRabbitMq(config => config.Host("rabbitmq://localhost")));
+            }).AddMassTransitHostedService();
             
             IMapper mapper = InitAutoMapper();
             services.AddSingleton(mapper);

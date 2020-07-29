@@ -50,6 +50,7 @@ namespace BeautySalonSystem.UI.Pages.Admin.Appointments
         public void OnPostConfirmAppointmentRequest(int id)
         {
             _appointmentsService.Confirm(id);
+            
             OnGet();
         }
     }

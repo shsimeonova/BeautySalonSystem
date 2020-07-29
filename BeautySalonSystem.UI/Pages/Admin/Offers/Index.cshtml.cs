@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BeautySalonSystem.UI.Models;
 using BeautySalonSystem.UI.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BeautySalonSystem.UI.Pages.Admin.Offers
@@ -14,7 +11,7 @@ namespace BeautySalonSystem.UI.Pages.Admin.Offers
 
         public AdminOffersIndex(IOffersService offersService)
         {
-            this._offersService = offersService;
+            _offersService = offersService;
         }
 
         public IEnumerable<OfferViewModel> AllOffers { get; set; }

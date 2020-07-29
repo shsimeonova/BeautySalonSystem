@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using BeautySalonSystem.Messages;
 using Microsoft.Extensions.Http;
 using BeautySalonSystem.UI.Models;
 using BeautySalonSystem.UI.Util;
+using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -27,8 +30,12 @@ namespace BeautySalonSystem.UI.Services
     
     public class AppointmentsService : MicroserviceHttpService, IAppointmentsService
     {
-        public AppointmentsService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor) : base(httpClient, httpContextAccessor)
-        {}
+        private readonly IBus _publisher;
+        public AppointmentsService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IBus publisher) :
+            base(httpClient, httpContextAccessor)
+        {
+            _publisher = publisher;
+        }
         
         public IConfiguration Configuration { get; }
         
@@ -84,12 +91,20 @@ namespace BeautySalonSystem.UI.Services
             return result;
         }
 
-        public void Confirm(int appointmentRequstId)
+        public void Confirm(int appointmentRequestId)
         {
             MicroserviceResponse response = Execute(
-                $"{_client.BaseAddress}/{appointmentRequstId}/confirm", 
+                $"{_client.BaseAddress}/{appointmentRequestId}/confirm", 
                 null, 
                 HttpMethod.Post);
+
+            if (response.Code == HttpStatusCode.OK)
+            {
+                _publisher.Publish(new AppointmentConfirmedMessage
+                {
+                    AppointmentId = appointmentRequestId
+                });
+            }
         }
     }
 }

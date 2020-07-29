@@ -75,7 +75,8 @@ namespace BeautySalonSystem.Appointments.Data.Repositories
         {
             var query = _context.Appointments
                 .Where(a => a.CustomerId == customerId)
-                .Where(a => a.IsConfirmed);
+                .Where(a => a.IsConfirmed)
+                .Where(a => a.Date > DateTime.Now);
 
             return query.ToList();
         }

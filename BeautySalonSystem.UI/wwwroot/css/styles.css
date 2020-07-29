@@ -9957,11 +9957,11 @@ h3 {
 @media (min-width: 992px) {
   .masthead .masthead-heading {
     text-align: center;
-    font-size: 4rem;
+    font-size: 2rem;
     line-height: 1.5rem;
   }
   .masthead .masthead-subheading {
-    font-size: 1.5rem;
+    font-size: 0.5rem;
   }
 }
 
@@ -9971,6 +9971,10 @@ h3 {
     text-align: center;
     font-size: 4rem;
     line-height: 1.5rem;
+  }
+
+  .masthead-subheading {
+    font-size: 2rem;
   }
 }
 

@@ -84,7 +84,8 @@ namespace BeautySalonSystem.Appointments.Controllers
                 CustomerId = input.CustomerId,
                 OfferId = input.OfferId,
                 Date = input.Date,
-                IsConfirmed = false
+                IsConfirmed = false,
+                DateRequested = DateTime.Now
             };
 
             _repository.Add(appointment);
@@ -115,7 +116,7 @@ namespace BeautySalonSystem.Appointments.Controllers
 
             double difference = Math.Abs(input.AppointmentRequestTime.Subtract(closestAppointment.Date).TotalMinutes);
 
-            if (difference < input.AppointmentRequestDuration)
+            if (difference < input.AppointmentRequestDuration || difference == 0)
             {
                 return Ok(new {
                     IsRequestTimeFree = false,
@@ -125,7 +126,9 @@ namespace BeautySalonSystem.Appointments.Controllers
                 });
             }
             
-            return Ok(true);
+            return Ok(new {
+                IsRequestTimeFree = true
+            });
         }
         
     }

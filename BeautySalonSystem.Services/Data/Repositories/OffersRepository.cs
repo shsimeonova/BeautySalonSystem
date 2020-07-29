@@ -75,7 +75,7 @@ namespace BeautySalonSystem.Products.Data
             
             if (activeOnly)
             {
-                query = query.Where(o => o.IsActive);
+                query = query.Where(o => o.IsActive).Where(o => o.ExpiryDate > DateTime.Now);
             }
             
             return query.Select(o => new OfferDto

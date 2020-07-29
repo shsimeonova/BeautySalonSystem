@@ -31,7 +31,7 @@
       <th scope="col">Подадено на</th>
       <th scope="col">Потребител</th>
       <th scope="col">Имена</th>
-      <th scope="col">Потвърдена</th>
+      <th scope="col">Имейл</th>
       <th scope="col">Оферта</th>
       <th scope="col">Действия</th>
     </tr>
@@ -43,17 +43,10 @@
           {
              <tr>
                <th scope="row">@appointmentRequest.Id</th>
-               <td>"to be added"</td>
+               <td>@appointmentRequest.DateRequested</td>
                <td>@appointmentRequest.UserInfo.UserName</td>
                <td>@appointmentRequest.UserInfo.FullName</td>
-               <td>@if (true)
-                   {
-                     <span>Активна</span>
-                   }
-                   else
-                   {
-                     <span>Неактивна</span>
-                   }
+               <td>@appointmentRequest.UserInfo.Email</td>
                <td>@appointmentRequest.offer.Name</td>
                <td class="admin-products-actions d-flex">
                  <form class="admin-products-actions-item" asp-page-handler="ConfirmAppointmentRequest" method="post">

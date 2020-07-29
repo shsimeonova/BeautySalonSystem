@@ -50,7 +50,7 @@ namespace IdentityServerHost.Quickstart.UI
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login(string returnUrl)
+        public async Task<IActionResult> Login(string returnUrl, bool isRedirectFromRegister)
         {
             var authParams = (await this._interaction.GetAuthorizationContextAsync(returnUrl)).Parameters;
             string actionParam = authParams["action"];
@@ -59,7 +59,7 @@ namespace IdentityServerHost.Quickstart.UI
             {
                 bool isRegister = actionParam.Equals("register");
 
-                if (isRegister)
+                if (isRegister && !isRedirectFromRegister)
                 {
                     return this.RedirectToAction(nameof(this.Register), new {returnUrl});
                 }
@@ -181,7 +181,18 @@ namespace IdentityServerHost.Quickstart.UI
                 }
                 else
                 {
-                    return Redirect(model.ReturnUrl);
+                    var authContext = (await this._interaction.GetAuthorizationContextAsync(model.ReturnUrl));
+                    string actionParam = authContext.Parameters["action"];
+
+                    if (actionParam != null)
+                    {
+                        context.Parameters.Remove("action");
+                    }
+                    return RedirectToAction("Login", "Account", new
+                    {
+                        returnUrl = model.ReturnUrl,
+                        isRedirectFromRegister = true
+                    });
                 }
             }
 

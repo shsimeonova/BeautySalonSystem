@@ -1,7 +1,11 @@
-﻿namespace BeautySalonSystem.Messages
+﻿using System;
+
+namespace BeautySalonSystem.Messages
 {
     public class AppointmentConfirmedMessage
     {
-        public int AppointmentId { get; set; }
+        public string CustomerEmail { get; set; }
+        public DateTime AppointmentTime { get; set; }
+        public string OfferName { get; set; }
     }
 }

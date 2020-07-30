@@ -15,8 +15,8 @@ namespace BeautySalonSystem.Email
         
         public async Task Consume(ConsumeContext<AppointmentConfirmedMessage> context)
         {
-            var message = context.Message;
-            await _emailService.SendEmail("blabla", "blala");
+            AppointmentConfirmedMessage message = context.Message;
+            await _emailService.SendEmail("appointment_confirmed", message.CustomerEmail);
         }
     }
 }

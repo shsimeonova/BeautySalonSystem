@@ -30,6 +30,15 @@ namespace BeautySalonSystem.Appointments.Controllers
             return Ok(appointments);
         }
         
+        [HttpGet("{id}")]
+        [Authorize]
+        public IActionResult List(int id)
+        {
+            var appointments = _repository.GetByID(id);
+
+            return Ok(appointments);
+        }
+        
         [HttpGet("confirmed")]
         [Authorize]
         public IActionResult ListConfirmed()

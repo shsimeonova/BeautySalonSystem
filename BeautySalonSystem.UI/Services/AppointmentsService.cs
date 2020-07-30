@@ -2,14 +2,9 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using BeautySalonSystem.Messages;
-using Microsoft.Extensions.Http;
+using AutoMapper;
 using BeautySalonSystem.UI.Models;
-using BeautySalonSystem.UI.Util;
-using MassTransit;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using HttpMethod = Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpMethod;
 
@@ -23,21 +18,26 @@ namespace BeautySalonSystem.UI.Services
         
         IEnumerable<AppointmentViewModel> GetAllNonConfirmed();
         
-        AppointmentFreeValidationResponseModel CheckIsAppointmentRequestTimeFree(DateTime appointmentRequestDate, int appointmentRequestDuration);
+        AppointmentViewModel GetById(int id);
 
-        void Confirm(int appointmentRequstId);
+        bool Confirm(int appointmentRequestId);
+
+        AppointmentFreeValidationResponseModel CheckIsAppointmentRequestTimeFree(DateTime appointmentRequestDate,
+            int appointmentRequestDuration);
     }
     
     public class AppointmentsService : MicroserviceHttpService, IAppointmentsService
     {
-        private readonly IBus _publisher;
-        public AppointmentsService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IBus publisher) :
-            base(httpClient, httpContextAccessor)
-        {
-            _publisher = publisher;
-        }
+        private IMapper _mapper;
         
-        public IConfiguration Configuration { get; }
+        public AppointmentsService(
+            IMapper mapper,
+            HttpClient httpClient, 
+            IHttpContextAccessor httpContextAccessor) 
+            : base(httpClient, httpContextAccessor)
+        {
+            _mapper = mapper;
+        }
         
         public void CreateAppointmentRequest(AppointmentCreateInputModel input)
         {
@@ -91,20 +91,25 @@ namespace BeautySalonSystem.UI.Services
             return result;
         }
 
-        public void Confirm(int appointmentRequestId)
+        public AppointmentViewModel GetById(int appointmentId)
+        {
+            MicroserviceResponse response = Execute(
+                $"{_client.BaseAddress}/{appointmentId}", 
+                null, 
+                HttpMethod.Get);
+            
+            var result = JsonConvert.DeserializeObject<AppointmentViewModel>(response.ReturnData);
+            return result;
+        }
+
+        public bool Confirm(int appointmentRequestId)
         {
             MicroserviceResponse response = Execute(
                 $"{_client.BaseAddress}/{appointmentRequestId}/confirm", 
                 null, 
                 HttpMethod.Post);
 
-            if (response.Code == HttpStatusCode.OK)
-            {
-                _publisher.Publish(new AppointmentConfirmedMessage
-                {
-                    AppointmentId = appointmentRequestId
-                });
-            }
+            return response.Code == HttpStatusCode.OK;
         }
     }
 }

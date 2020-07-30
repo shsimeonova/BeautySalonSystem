@@ -104,6 +104,8 @@ namespace BeautySalonSystem.UI
                 client.BaseAddress = new Uri(Configuration.GetSection("Services:Identity:Url").Value);
             });
 
+            services.AddTransient<IAppointmentsBusinessService, AppointmentsBusinessService>();
+
             services.AddMassTransit(options =>
             {
                 options.AddBus(context => Bus.Factory.CreateUsingRabbitMq(config => config.Host("rabbitmq://localhost")));

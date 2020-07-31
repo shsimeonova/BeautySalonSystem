@@ -35,7 +35,7 @@ namespace IdentityServerAspNetIdentity
             services.AddControllersWithViews();
             
             var migrationName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            const string connectionString = @"Server=.;Database=BeautySalonSystemIdentityDatabase;Trusted_Connection=True;MultipleActiveResultSets=true";
+            var connectionString = this.Configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
             services.AddDbContext<ApplicationDbContext>(opt =>
             {
                 opt.UseSqlServer(connectionString, sqlOpt => sqlOpt.MigrationsAssembly(migrationName));

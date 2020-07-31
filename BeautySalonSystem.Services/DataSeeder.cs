@@ -69,7 +69,9 @@ namespace BeautySalonSystem.Products
                         productsDict[product.Name] = product.Id;
                     }
 
-                    var offers = new List<CreateProductOfferInputModel>
+                    if (productsDict.Count > 0)
+                    {
+                        var offers = new List<CreateProductOfferInputModel>
                     {
                         new CreateProductOfferInputModel
                         {
@@ -112,12 +114,12 @@ namespace BeautySalonSystem.Products
                         try
                         {
                             offersService.Create(offer, "SYSTEM");
-
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine(e.Message);
                         }
+                    }
                     }
                 }
             }

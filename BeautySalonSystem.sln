@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautySalonSystem.Appointments", "BeautySalonSystem.Appointments\BeautySalonSystem.Appointments.csproj", "{1558C6F1-CE40-4F2C-BC72-B18EBA7F97C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautySalonSystem.Email", "BeautySalonSystem.Email\BeautySalonSystem.Email.csproj", "{1B85D2B9-5E56-4796-B237-CDE32671890E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautySalonSystem.Identity", "BeautySalonSystem.IdentityServerIdentity\BeautySalonSystem.Identity.csproj", "{7A8B7F7E-64A2-421C-9B11-0FC8A8026559}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautySalonSystem.Products", "BeautySalonSystem.Services\BeautySalonSystem.Products.csproj", "{D4FDC78D-84F0-44CA-950C-9663F758EEA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautySalonSystem.UI", "BeautySalonSystem.UI\BeautySalonSystem.UI.csproj", "{C276F8F3-EF85-4597-B644-1DE0FCDF9520}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeautySalonSystem", "BeautySalonSystem\BeautySalonSystem.csproj", "{966B0E37-8B50-480B-B2AE-4D91E7F1E1D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1558C6F1-CE40-4F2C-BC72-B18EBA7F97C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1558C6F1-CE40-4F2C-BC72-B18EBA7F97C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1558C6F1-CE40-4F2C-BC72-B18EBA7F97C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1558C6F1-CE40-4F2C-BC72-B18EBA7F97C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B85D2B9-5E56-4796-B237-CDE32671890E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B85D2B9-5E56-4796-B237-CDE32671890E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B85D2B9-5E56-4796-B237-CDE32671890E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B85D2B9-5E56-4796-B237-CDE32671890E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A8B7F7E-64A2-421C-9B11-0FC8A8026559}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A8B7F7E-64A2-421C-9B11-0FC8A8026559}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A8B7F7E-64A2-421C-9B11-0FC8A8026559}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A8B7F7E-64A2-421C-9B11-0FC8A8026559}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4FDC78D-84F0-44CA-950C-9663F758EEA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4FDC78D-84F0-44CA-950C-9663F758EEA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4FDC78D-84F0-44CA-950C-9663F758EEA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4FDC78D-84F0-44CA-950C-9663F758EEA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C276F8F3-EF85-4597-B644-1DE0FCDF9520}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C276F8F3-EF85-4597-B644-1DE0FCDF9520}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C276F8F3-EF85-4597-B644-1DE0FCDF9520}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C276F8F3-EF85-4597-B644-1DE0FCDF9520}.Release|Any CPU.Build.0 = Release|Any CPU
+		{966B0E37-8B50-480B-B2AE-4D91E7F1E1D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{966B0E37-8B50-480B-B2AE-4D91E7F1E1D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{966B0E37-8B50-480B-B2AE-4D91E7F1E1D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{966B0E37-8B50-480B-B2AE-4D91E7F1E1D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -76,6 +76,32 @@ namespace IdentityServerAspNetIdentity
                         adminRoleResult = await roleMgr.CreateAsync(new IdentityRole("Admin"));
                     }
                     
+                    var user = userMgr.FindByNameAsync("_simona_").Result;
+                    if (user == null)
+                    {
+                        admin = new ApplicationUser
+                        {
+                            UserName = "_simona_",
+                            Email = "ssimeonova159@gmail.com",
+                            EmailConfirmed = true,
+                        };
+                        var result = userMgr.CreateAsync(admin, "11223344Aa!").Result;
+                        if (!result.Succeeded)
+                        {
+                            throw new Exception(result.Errors.First().Description);
+                        }
+
+                        result = userMgr.AddClaimsAsync(admin, new Claim[]{
+                            new Claim(JwtClaimTypes.Name, "Simona Simeonova"),
+                            new Claim(JwtClaimTypes.Role, "User")
+                        }).Result;
+                        if (!result.Succeeded)
+                        {
+                            throw new Exception(result.Errors.First().Description);
+                        }
+                        Log.Debug("Admin created");
+                    }
+                    
                     await userMgr.AddToRoleAsync(admin, "Admin");
                 }
             }

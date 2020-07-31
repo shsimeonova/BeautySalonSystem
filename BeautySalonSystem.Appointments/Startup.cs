@@ -41,6 +41,15 @@ namespace BeautySalonSystem.Appointments
                 });
 
             services.AddControllers();
+
+            using (var serviceProvider = services.BuildServiceProvider())
+            {
+                using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<AppointmentsDbContext>();
+                    context.Database.Migrate();
+                }
+            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

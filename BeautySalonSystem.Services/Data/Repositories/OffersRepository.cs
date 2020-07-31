@@ -19,6 +19,7 @@ namespace BeautySalonSystem.Products.Data
 
         IEnumerable<OfferDto> GetAll(bool activeOnly);
         IEnumerable<OfferDto> GetAllByIds(bool activeOnly, int[] ids);
+        bool ExistsByName(string name);
         Offer GetById(int id);
         void Update(Offer item);
         bool SaveChanges();
@@ -89,6 +90,22 @@ namespace BeautySalonSystem.Products.Data
                 Products = o.ProductOffers.Select(po => po.Product).ToList(),
                 IsActive = o.IsActive
             }).ToList();
+        }
+
+        public bool ExistsByName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException();
+            }
+            var offer = _context.Offers.Where(o => o.Name == name).FirstOrDefault();
+
+            if (offer == null)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public Offer GetById(int id)

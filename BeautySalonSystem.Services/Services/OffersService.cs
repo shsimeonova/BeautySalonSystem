@@ -112,6 +112,11 @@ namespace BeautySalonSystem.Products.Services
 
         public int Create(CreateProductOfferInputModel input, string currentUserId)
         {
+            if (_offersRepository.ExistsByName(input.Name))
+            {
+                throw new ArgumentException("Offer with this name exists");
+            }
+            
             IEnumerable<Product> selectedProducts = _productsRepository.GetByIds(input.Products);
             
             Offer offer = new Offer
@@ -121,7 +126,8 @@ namespace BeautySalonSystem.Products.Services
                 Discount = input.Discount,
                 ExpiryDate = DateTime.ParseExact(input.ExpiryDate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
                 Image = input.ImageUrl,
-                AddedById = currentUserId
+                AddedById = currentUserId,
+                IsActive = input.IsActive
             };
             
             _offersRepository.Add(offer);

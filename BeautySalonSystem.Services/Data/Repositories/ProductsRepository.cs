@@ -21,6 +21,8 @@ namespace BeautySalonSystem.Products.Data
         
         IEnumerable<Product> GetAllByOffer(Offer offer);
 
+        bool ExistsByName(string name);
+
         Product GetByID(int id);
 
         void Update(Product item);
@@ -48,6 +50,11 @@ namespace BeautySalonSystem.Products.Data
         public IEnumerable<Product> GetAllByOffer(Offer offer)
         {
             return offer.ProductOffers.Select(po => po.Product).ToList();
+        }
+
+        public bool ExistsByName(string name)
+        {
+            return _context.Products.Where(p => p.Name == name).FirstOrDefault() != null;
         }
 
         public Product GetByID(int id)

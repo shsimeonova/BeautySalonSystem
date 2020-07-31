@@ -17,13 +17,16 @@ namespace BeautySalonSystem.Products
 
     public class Startup
     {
-        public Startup(IConfiguration configuration) => this.Configuration = configuration;
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            var connStr = this.Configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
+            var connStr = Configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
             services
                 .AddDbContext<ProductsDbContext>(opt => opt.UseSqlServer(connStr))
                 .AddTransient<IProductsRepository, ProductsRepository>()
@@ -41,7 +44,7 @@ namespace BeautySalonSystem.Products
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
             
-            var SecretKey = this.Configuration.GetSection("ApplicationSettings:Secret").Value;
+            var SecretKey = Configuration.GetSection("ApplicationSettings:Secret").Value;
 
             services.AddAuthorization();
             
@@ -58,6 +61,9 @@ namespace BeautySalonSystem.Products
                 });
 
             services.AddControllers(x => x.AllowEmptyInputInBodyModelBinding = true);
+
+            var _dataSeeder = new DataSeeder();
+            _dataSeeder.EnsureSeedData(connStr);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

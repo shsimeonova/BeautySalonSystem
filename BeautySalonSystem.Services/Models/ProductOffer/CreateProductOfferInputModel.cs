@@ -18,5 +18,7 @@ namespace BeautySalonSystem.Products.Models.ProductOffer
         public string ExpiryDate { get; set; }
         
         public string ImageUrl { get; set; }
+        
+        public bool IsActive { get; set; }
     }
 }

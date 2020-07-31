@@ -118,21 +118,24 @@ namespace BeautySalonSystem.Appointments.Controllers
         [HttpPost("check-time")]
         public IActionResult CheckIsAppointmentRequestTimeFree(CheckAppointmentRequestTimeInputModel input)
         {
-            var appointments = _repository.GetAll();
-            var closestAppointment = appointments
-                .OrderBy(a => Math.Abs((a.Date - input.AppointmentRequestTime).Ticks))
-                .First();
-
-            double difference = Math.Abs(input.AppointmentRequestTime.Subtract(closestAppointment.Date).TotalMinutes);
-
-            if (difference < input.AppointmentRequestDuration || difference == 0)
+            List<Appointment> appointments = new List<Appointment>(_repository.GetAll());
+            if (appointments.Count > 0)
             {
-                return Ok(new {
-                    IsRequestTimeFree = false,
-                    ClosestAppointmentId = closestAppointment.Id,
-                    ClosestAppointmentDate = closestAppointment.Date,
-                    ClosestAppointmentOfferId = closestAppointment.OfferId
-                });
+                var closestAppointment = appointments
+                    .OrderBy(a => Math.Abs((a.Date - input.AppointmentRequestTime).Ticks))
+                    .First();
+
+                double difference = Math.Abs(input.AppointmentRequestTime.Subtract(closestAppointment.Date).TotalMinutes);
+
+                if (difference < input.AppointmentRequestDuration || difference == 0)
+                {
+                    return Ok(new {
+                        IsRequestTimeFree = false,
+                        ClosestAppointmentId = closestAppointment.Id,
+                        ClosestAppointmentDate = closestAppointment.Date,
+                        ClosestAppointmentOfferId = closestAppointment.OfferId
+                    });
+                }
             }
             
             return Ok(new {

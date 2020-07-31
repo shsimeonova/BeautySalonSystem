@@ -7,15 +7,15 @@
 
 <div class="logged-out-page">
     <h1>
-        Logout
-        <small>You are now logged out</small>
+        Изход
+        <small>Вие успешно излезнахте от системата</small>
     </h1>
 
     @if (Model.PostLogoutRedirectUri != null)
     {
         <div>
-            Click <a class="PostLogoutRedirectUri" href="@Model.PostLogoutRedirectUri">here</a> to return to the
-            <span>@Model.ClientName</span> application.
+            Последвайте <a class="PostLogoutRedirectUri" href="@Model.PostLogoutRedirectUri">линка</a> , за да се върнете към приложението.
+            @* <span>@Model.ClientName</span>  *@
         </div>
     }
 

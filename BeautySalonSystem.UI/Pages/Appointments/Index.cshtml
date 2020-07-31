@@ -1,0 +1,46 @@
+﻿@page
+@model BeautySalonSystem.UI.Pages.Appointments.Index
+
+@{
+   ViewData["Title"] = "Appointment Request";
+}
+
+<header class="masthead-admin bg-primary text-white text-center">
+  <div class="masthead-admin-container d-flex align-items-center flex-column">
+    <h1 class="masthead-heading text-uppercase mb-0 text-white">Запиши час</h1>
+    <!-- Icon Divider-->
+    <div class="divider-custom divider-light">
+      <div class="divider-custom-line"></div>
+      <div class="divider-custom-icon"><i class="fas fa-leaf"></i></div>
+      <div class="divider-custom-line"></div>
+    </div>
+    <!-- Masthead Subheading-->
+    <p class="masthead-subheading font-weight-light">Изпрати своето запитване и изчакай да бъде потвърдено</p>
+  </div>
+</header>
+
+@if (Model.Message != null)
+{
+  <div class="alert alert-@Model.Message.Type.ToString().ToLower() alert-dismissible fade show text-center" role="alert">
+    @Model.Message.Text
+  </div>
+}
+
+<div class="container col-6">
+  <form method="post">
+    <div class="form-group">
+      <input type="hidden" value="@Model.OfferId" asp-for="@Model.OfferId"/>
+    </div>
+    <div class="form-group">
+        <input type="hidden" value="@Model.Duration" asp-for="@Model.Duration"/>
+    </div>
+    <div class="form-group">
+      <label asp-for="@Model.AppointmentRequestDate" class="form-label">Избери дата и час</label>
+      <span asp-validation-for="@Model.AppointmentRequestDate" class="validation-message-span"></span>
+      <input class="form-control" type="datetime-local" asp-for="@Model.AppointmentRequestDate">
+    </div>
+    <div class="form-group">
+      <button class="btn btn btn-success align-content-center center-block">Изпрати</button>
+    </div>
+  </form>
+</div>

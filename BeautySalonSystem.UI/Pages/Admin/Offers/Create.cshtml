@@ -1,0 +1,58 @@
+﻿@page
+@model BeautySalonSystem.UI.Pages.Admin.Offers.Create
+
+@{
+    ViewData["Title"] = "Create Offer";
+}
+
+<header class="masthead-admin bg-primary text-white text-center">
+    <div class="masthead-admin-container d-flex align-items-center flex-column">
+        <h1 class="masthead-heading text-uppercase mb-0 text-white">Добави нова оферта</h1>
+        <!-- Icon Divider-->
+        <div class="divider-custom divider-light">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-leaf"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <!-- Masthead Subheading-->
+        <p class="masthead-subheading font-weight-light mb-0"></p>
+    </div>
+</header>
+
+<div class="container align-content-center admin-products-actions">
+  <a class="btn btn-default" href="@Url.Page("/Admin/Offers/Index")"><i class="fas fa-chevron-left"></i> Обратно</a>
+</div>
+
+<div class="container col-6">
+    <form method="post" id="create-offer-form">
+        <div class="form-group">
+            <label asp-for="Name" class="col-form-label col">*Име</label>
+            <span asp-validation-for="Name" class="validation-message-span"></span>
+            <input type="text" class="form-control" asp-for="Name" data-val="true" 
+                   data-val-minlength="Името на офертата трябва да е минимум 3 символа."
+                   data-val-required="Полето е задължително.">
+        </div>
+        <div class="form-group">
+            <label asp-for="ExpiryDate" class="col-form-label col">*Активна до:</label>
+            <span asp-validation-for="ExpiryDate" class="validation-message-span"></span>
+            <input type="date" class="form-control datetime-local" asp-for="ExpiryDate" id="offer-expiry-date" data-val="true">
+        </div>
+        <div class="form-group">
+            <label asp-for="ImageUrl" class="col-form-label col">Линк на снимка:</label>
+            <span asp-validation-for="ImageUrl" class="validation-message-span"></span>
+            <input type="text" class="form-control" asp-for="ImageUrl" data-val="true">
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label asp-for="SelectedProductsIds" class="col-form-label col">*Включени продукти:</label>
+                    <span asp-validation-for="SelectedProductsIds" class="validation-message-span"></span>
+                    <select asp-items="Model.Products" asp-for="SelectedProductsIds" class="selectpicker form-control" data-live-search="true" data-actions-box="true" multiple data-val="true"></select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn btn-success">Добави</button>
+        </div>
+    </form>
+</div>

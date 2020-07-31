@@ -1,0 +1,76 @@
+﻿@page
+@model BeautySalonSystem.UI.Pages.Offers.Index
+
+@{
+  ViewData["Title"] = "Offer Index";
+}
+
+<header class="masthead-admin bg-primary text-white text-center">
+  <div class="masthead-admin-container d-flex align-items-center flex-column">
+    <h1 class="masthead-heading text-uppercase mb-0 text-white">Оферти</h1>
+    <!-- Icon Divider-->
+    <div class="divider-custom divider-light">
+      <div class="divider-custom-line"></div>
+      <div class="divider-custom-icon"><i class="fas fa-leaf"></i></div>
+      <div class="divider-custom-line"></div>
+    </div>
+    <!-- Masthead Subheading-->
+    <p class="masthead-subheading font-weight-light mb-0"></p>
+  </div>
+</header>
+
+<div class="offers-container row">
+  @foreach (var offer in Model.AllOffers)
+  {
+    <div class="col-6">
+      <!-- First product box start here-->
+      <div class="prod-info-main prod-wrap clearfix">
+        <div class="row">
+          <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="product-image">
+              @if (offer.ImageUrl == null)
+              {
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Google_Earth_Icon.png" class="img-responsive">
+              }
+              else
+              {
+                <img src="@offer.ImageUrl" class="img-responsive">
+              }
+              <span class="tag2 hot">
+                @offer.Discount%
+              </span>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="product-deatil">
+              <h5 class="name">
+                <a href="#">
+                  @offer.Name
+                </a>                       
+
+              </h5>
+              <p class="price-container">
+                <span>@offer.TotalPrice.ToString("0.00")</span>
+              </p>
+              <span class="tag1"></span> 
+            </div>
+            <div class="description">
+              @foreach (var product in offer.Products)
+              {
+                <p>@product.Name</p>
+              }
+            </div>
+            <div class="product-info smart-form">
+              <div class="row">
+                <div class="col-md-12">
+                  <a class="btn btn-primary text-white" asp-page="/Appointments/Index" asp-route-id="@offer.Id">Запази час</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- end product -->
+    </div>
+  }
+</div>

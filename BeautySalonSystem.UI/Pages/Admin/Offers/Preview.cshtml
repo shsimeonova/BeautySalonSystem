@@ -1,0 +1,93 @@
+﻿@page
+@model BeautySalonSystem.UI.Pages.Admin.Offers.Preview
+
+@{
+    ViewData["Title"] = "Preview Offer";
+    var selectedIds = Model.OfferCreateInput.ProductIds;
+}
+
+<header class="masthead-admin bg-primary text-white text-center">
+    <div class="masthead-admin-container d-flex align-items-center flex-column">
+        <h1 class="masthead-heading text-uppercase mb-0 text-white">Прегледай</h1>
+        <!-- Icon Divider-->
+        <div class="divider-custom divider-light">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-leaf"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <!-- Masthead Subheading-->
+        <p class="masthead-subheading font-weight-light mb-0"></p>
+    </div>
+</header>
+
+<div class="container align-content-center admin-products-actions">
+  <a class="btn btn-default" href="@Url.Page("/Admin/Offers/Create")"><i class="fas fa-chevron-left"></i> Обратно</a>
+</div>
+
+<div class="container col-6">
+    <form method="post" onsubmit="removeSelectedProductsDisabled(this)">
+        <div class="form-group">
+            <label asp-for="@Model.OfferCreateInput.Name" class="col-form-label col-md-4">Име</label>
+            <span asp-validation-for="Name"></span>
+            <input type="text" class="form-control" asp-for="@Model.Name"
+                   data-val="true" 
+                   data-val-minlength="Името на офертата трябва да е минимум 3 символа."
+                   data-val-required="Полето е задължително.">
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <select id="items-select"
+                            asp-items="@Model.Products"
+                            asp-for="@Model.OfferCreateInput.ProductIds" class="selectpicker form-control" multiple disabled>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.TotalPrice" class="col-form-label col-md-4">Обща цена</label>
+            <span asp-validation-for="TotalPrice"></span>
+            <input type="text" id="preview-total-price" class="form-control" asp-for="TotalPrice" data-val="true"/>
+        </div>
+        <input type="hidden" id="total-price-default" value="@Model.OfferCreateInput.TotalPrice">
+        <input type="hidden" asp-for="ImageUrl">
+        <div class="form-group">
+            <label asp-for="@Model.OfferCreateInput.ExpiryDate" class="col-form-label col-md-3">Активна до:</label>
+            <input type="date" class="form-control datetime-local" asp-for="@Model.ExpiryDate">
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Discount" class="col-form-label col-md-4" id="discount-label">Отстъпка</label>
+            <span asp-validation-for="Discount"></span>
+            <input type="number" class="form-control" asp-for="@Model.Discount" onchange="updateTotalPrice(this)"
+                   data-val="true"
+                   data-val-range="Отстъпката трябва да бъде число между 1 и 90.">
+        </div>
+        <script type="text/javascript">
+          function updateTotalPrice(discount) {
+            var discountValue = Number(discount.value);
+            var totalPrice = Number(document.getElementById('total-price-default').value);
+            var totalPriceInput = document.getElementById('preview-total-price');
+            var calculatedDiscount = 0;
+        
+            console.log("discount value: " + discountValue)
+            if (discountValue !== 0) {
+                document.getElementById('total-price-default').value;
+                calculatedDiscount = (discountValue / 100) * totalPrice;
+                totalPrice = totalPrice - (calculatedDiscount);
+                totalPriceInput.value = totalPrice.toFixed(2);
+            } else {
+                totalPriceInput.value = totalPrice;
+            }
+            document.getElementById('discount-label').innerHTML = "Отстъпка (" + calculatedDiscount + "лв)";
+          }
+          
+          function removeSelectedProductsDisabled() {
+              document.getElementById('items-select').disabled = false;
+              this.submit()
+          }
+        </script>
+        <div class="form-group">
+            <button class="btn btn btn-success">Потвърди</button>
+        </div>
+    </form>
+</div>

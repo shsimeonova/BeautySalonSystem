@@ -1,0 +1,58 @@
+﻿@page
+@model BeautySalonSystem.UI.Pages.Admin.Index
+
+@{
+  ViewData["Title"] = "Admin Index";
+}
+
+<header class="masthead-admin bg-primary text-white text-center">
+    <div class="masthead-admin-container d-flex align-items-center flex-column">
+        <h1 class="masthead-heading text-uppercase mb-0 text-white">Администрация</h1>
+        <!-- Icon Divider-->
+        <div class="divider-custom divider-light">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-leaf"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <!-- Masthead Subheading-->
+        <p class="masthead-subheading font-weight-light mb-0"></p>
+    </div>
+</header>
+
+<section class="page-section admin-index-grid" id="portfolio">
+    <div class="container">
+        <!-- Portfolio Grid Items-->
+        <div class="row">
+            <!-- Portfolio Item 1-->
+            <div class="col-md-6 col-lg-4 mb-5">
+                <div class="admin-index-grid-item mx-auto">
+                    <div class="admin-index-grid-item-caption d-flex align-items-center justify-content-center h-100 w-100 img-responsive">
+                        <div class="admin-index-grid-item-caption-content text-center text-white">
+                            <div class="col"><a class="admin-index-grid-link" asp-page="./Products/Index">Услуги</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Portfolio Item 1-->
+            <div class="col-md-6 col-lg-4 mb-5">
+                <div class="admin-index-grid-item mx-auto">
+                    <div class="admin-index-grid-item-caption d-flex align-items-center justify-content-center h-100 w-100 img-responsive">
+                        <div class="admin-index-grid-item-caption-content text-center">
+                            <div class="col"><a class="admin-index-grid-link" asp-page="./Appointments/Index">Часове</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Portfolio Item 1-->
+            <div class="col-md-6 col-lg-4 mb-5">
+                <div class="admin-index-grid-item mx-auto">
+                    <div class="admin-index-grid-item-caption d-flex align-items-center justify-content-center h-100 w-100 img-responsive">
+                        <div class="admin-index-grid-item-caption-content text-center">
+                            <div class="col"><a class="admin-index-grid-link" asp-page="./Offers/Index">Оферти</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
